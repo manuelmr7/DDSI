@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence           http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd">
+  <persistence-unit name="DDSI_P0_jar_1.0-SNAPSHOTPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>Controlador.Actividad</class>
+    <class>Controlador.Monitor</class>
+    <class>Controlador.Socio</class>
+    <class>Modelo.Actividad</class>
+    <class>Modelo.Socio</class>
+    <class>Modelo.Monitor</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mariadb://172.18.1.241:3306/DDSI_080"/>
+      <property name="javax.persistence.jdbc.user" value="DDSI_080"/>
+      <property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.password" value="DDSI_080"/>
+    </properties>
+  </persistence-unit>
+</persistence>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+    "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.connection.driver_class">org.mariadb.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mariadb://172.18.1.241:3306/DDSI_080</property>
+        <property name="hibernate.connection.username">DDSI_080</property>
+        <property name="hibernate.connection.password">DDSI_080</property>
+        <property name="hibernate.show_sql">true</property>
+        
+        <!-- También añade estas propiedades recomendadas -->
+        <property name="hibernate.dialect">org.hibernate.dialect.MariaDBDialect</property>
+        <property name="hibernate.connection.pool_size">10</property>
+        
+        <mapping class="Modelo.Monitor"/>
+        <mapping class="Modelo.Actividad"/>
+        <mapping class="Modelo.Socio"/>
+    </session-factory>
+</hibernate-configuration>
+
