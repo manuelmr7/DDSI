@@ -19,4 +19,8 @@ public class ActividadDAO {
     public Actividad buscarPorId(Session session, String idActividad) throws Exception {
         return session.find(Actividad.class, idActividad);
     }
+    public List<Actividad> listaActividades(Session session) {
+        Query<Actividad> q = session.createQuery("from Actividad", Actividad.class);
+        return q.getResultList();
+    }
 }

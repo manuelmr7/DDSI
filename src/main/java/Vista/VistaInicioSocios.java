@@ -29,7 +29,7 @@ public class VistaInicioSocios extends javax.swing.JPanel {
         jScrollPane1 = new javax.swing.JScrollPane();
         jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        jTableSocios = new javax.swing.JTable();
 
         jTable1.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -44,7 +44,7 @@ public class VistaInicioSocios extends javax.swing.JPanel {
         ));
         jScrollPane1.setViewportView(jTable1);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        jTableSocios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null, null, null, null},
                 {null, null, null, null, null, null, null, null},
@@ -55,7 +55,7 @@ public class VistaInicioSocios extends javax.swing.JPanel {
                 "Socio", "Nombre", "DNI", "Fecha de Nacimiento", "Teléfono", "Correo", "Fecha de Alta", "Categoría"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(jTableSocios);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
@@ -76,6 +76,6 @@ public class VistaInicioSocios extends javax.swing.JPanel {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    public javax.swing.JTable jTableSocios;
     // End of variables declaration//GEN-END:variables
 }

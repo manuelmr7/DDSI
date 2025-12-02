@@ -1,5 +1,6 @@
 package Modelo;
 
+import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 
@@ -31,5 +32,9 @@ public class SocioDAO {
         query.setParameter("numero", numeroSocio);
         query.setParameter("dni", dni);
         return query.getSingleResult() > 0;
+    }
+    public List<Socio> listaSocios(Session session) {
+        Query<Socio> q = session.createQuery("from Socio", Socio.class);
+        return q.getResultList();
     }
 }
