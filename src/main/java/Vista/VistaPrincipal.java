@@ -19,7 +19,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
         initComponents();
         this.cardLayout=new java.awt.CardLayout();
         panelContenedor.setLayout(this.cardLayout);
-        this.setMinimumSize(new java.awt.Dimension(1000,600));
+        this.setMinimumSize(new java.awt.Dimension(1400,600));
     }
 
     /**
