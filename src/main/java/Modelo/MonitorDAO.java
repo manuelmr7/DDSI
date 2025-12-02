@@ -29,4 +29,25 @@ public class MonitorDAO {
         Query<Monitor> q = session.createQuery("from Monitor", Monitor.class);
         return q.getResultList();
     }
+    public Monitor buscarPorCodMonitor(Session session, String codMonitor)
+    {
+        return session.get(Monitor.class,codMonitor);
+    }
+    public void insertarMonitor(Session session,Monitor monitor) throws Exception
+    {
+        session.save(monitor);
+    }
+    public void borrarMonitor(Session session,Monitor monitor) throws Exception
+    {
+        session.delete(monitor);
+    }
+    public void actualizarMonitor(Session session,Monitor monitor) throws Exception
+    {
+        session.update(monitor);
+    }
+    public String obtenerUltimoCodigo(Session session)
+    {
+        Query<String> q=session.createQuery("SELECT max(m.codMonitor) FROM Monitor m",String.class);
+        return q.getSingleResult();
+    }
 }

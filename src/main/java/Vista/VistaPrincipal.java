@@ -99,7 +99,6 @@ public class VistaPrincipal extends javax.swing.JFrame {
         menuSalir.setText("Salir");
 
         menuItemSalir.setText("Salir");
-        menuItemSalir.setActionCommand("Salir");
         menuSalir.add(menuItemSalir);
 
         menuBar.add(menuSalir);
@@ -137,7 +136,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     public javax.swing.JMenuItem menuItemInicio;
     public javax.swing.JMenuItem menuItemSalir;
     public javax.swing.JMenu menuMonitores;
-    private javax.swing.JMenu menuSalir;
+    public javax.swing.JMenu menuSalir;
     public javax.swing.JMenu menuSocios;
     public javax.swing.JPanel panelContenedor;
     // End of variables declaration//GEN-END:variables
