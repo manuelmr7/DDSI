@@ -26,32 +26,68 @@ public class VistaInicioActividades extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jTableActividades = new javax.swing.JTable();
+        nuevaActividad = new javax.swing.JButton();
+        bajaActividad = new javax.swing.JButton();
+        actualizarActividad = new javax.swing.JButton();
+        verInscripciones = new javax.swing.JButton();
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel1.setText("Gestión de Actividades");
+        jTableActividades.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        jScrollPane1.setViewportView(jTableActividades);
+
+        nuevaActividad.setText("Nueva Actividad");
+
+        bajaActividad.setText("Baja Actividad");
+
+        actualizarActividad.setText("Actualizar Actividad");
+
+        verInscripciones.setText("Ver Inscripciones");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(45, Short.MAX_VALUE)
-                .addComponent(jLabel1)
-                .addGap(14, 14, 14))
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(nuevaActividad)
+                .addGap(31, 31, 31)
+                .addComponent(bajaActividad)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addComponent(actualizarActividad)
+                .addGap(18, 18, 18)
+                .addComponent(verInscripciones))
+            .addComponent(jScrollPane1)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addComponent(jLabel1)
-                .addContainerGap(131, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 274, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nuevaActividad)
+                    .addComponent(bajaActividad)
+                    .addComponent(actualizarActividad)
+                    .addComponent(verInscripciones)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
+    public javax.swing.JButton actualizarActividad;
+    public javax.swing.JButton bajaActividad;
+    private javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JTable jTableActividades;
+    public javax.swing.JButton nuevaActividad;
+    public javax.swing.JButton verInscripciones;
     // End of variables declaration//GEN-END:variables
 }

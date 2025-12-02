@@ -34,6 +34,7 @@ public class ControladorPrincipal implements ActionListener {
         //Funcionar tablas
         new ControladorMonitor(this.vistaMonitores,sessionFactory);
         new ControladorSocio(this.vistaSocios,sessionFactory);
+        new ControladorActividad(this.vistaActividades,sessionFactory);
         // AÑADIR PANELES CON CARDLAYOUT
         vistaPrincipal.panelContenedor.add(vistaInicio, "inicio");
         vistaPrincipal.panelContenedor.add(vistaMonitores, "monitores");

@@ -1,4 +1,4 @@
-package Controlador;
+/*package Controlador;
 
 import Modelo.Actividad;
 import Modelo.ActividadDAO;
@@ -83,6 +83,96 @@ public class ControladorActividad {
             if (sesion != null && sesion.isOpen()) {
                 sesion.close();
             }
+        }
+    }
+}*/
+
+package Controlador;
+
+import Modelo.Actividad;
+import Modelo.ActividadDAO;
+import Util.GestionTablasActividad;
+import Vista.VistaInicioActividades;
+import Vista.VistaMensajes;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.List;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+
+public class ControladorActividad implements ActionListener {
+
+    private final SessionFactory sessionFactory;
+    private final VistaInicioActividades vInicioActividades;
+    private final ActividadDAO actividadDAO;
+    private final VistaMensajes vistaMensajes;
+    private Session sesion;
+
+    public ControladorActividad(VistaInicioActividades vInicioActividades, SessionFactory sessionFactory) {
+        this.vInicioActividades = vInicioActividades;
+        this.sessionFactory = sessionFactory;
+        this.actividadDAO = new ActividadDAO();
+        this.vistaMensajes = new VistaMensajes();
+
+        addListeners();
+        dibujaRellenaTablaActividades();
+    }
+
+    private void addListeners() {
+        vInicioActividades.nuevaActividad.addActionListener(this);
+        vInicioActividades.nuevaActividad.setActionCommand("NuevaActividad");
+
+        vInicioActividades.bajaActividad.addActionListener(this);
+        vInicioActividades.bajaActividad.setActionCommand("BajaActividad");
+
+        vInicioActividades.actualizarActividad.addActionListener(this);
+        vInicioActividades.actualizarActividad.setActionCommand("ActualizarActividad");
+        
+        vInicioActividades.verInscripciones.addActionListener(this);
+        vInicioActividades.verInscripciones.setActionCommand("VerInscripciones");
+    }
+
+    private void dibujaRellenaTablaActividades() {
+        GestionTablasActividad.inicializarTablaActividades(vInicioActividades);
+        GestionTablasActividad.dibujarTablaActividades(vInicioActividades);
+
+        Transaction tr = null;
+        try {
+            sesion = sessionFactory.openSession();
+            tr = sesion.beginTransaction();
+
+            List<Actividad> listaActividades = actividadDAO.listaActividades(sesion);
+
+            GestionTablasActividad.vaciarTablaActividades();
+            GestionTablasActividad.rellenarTablaActividades(listaActividades);
+
+            tr.commit();
+        } catch (Exception ex) {
+            if (tr != null) tr.rollback();
+            vistaMensajes.mostrarError("Error al recuperar las actividades: " + ex.getMessage());
+        } finally {
+            if (sesion != null && sesion.isOpen()) {
+                sesion.close();
+            }
+        }
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        switch (e.getActionCommand()) {
+            case "NuevaActividad":
+                vistaMensajes.mostrarInfo("Funcionalidad Nueva Actividad en construcción");
+                break;
+            case "BajaActividad":
+                vistaMensajes.mostrarInfo("Funcionalidad Baja Actividad en construcción");
+                break;
+            case "ActualizarActividad":
+                vistaMensajes.mostrarInfo("Funcionalidad Actualizar Actividad en construcción");
+                break;
+            case "VerInscripciones":
+                vistaMensajes.mostrarInfo("Selecciona una actividad para ver sus inscripciones (Próximamente)");
+                break;
         }
     }
 }
