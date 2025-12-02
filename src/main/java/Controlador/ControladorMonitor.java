@@ -124,6 +124,7 @@ public class ControladorMonitor implements ActionListener {
      */
     private void dibujaRellenaTablaMonitores() {
         // 1. Dibujamos la estructura (columnas y anchos)
+        GestionTablasMonitor.inicializarTablaMonitores(vInicioMonitores);
         GestionTablasMonitor.dibujarTablaMonitores(vInicioMonitores);
         
         Transaction tr = null;

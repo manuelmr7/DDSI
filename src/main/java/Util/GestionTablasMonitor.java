@@ -28,7 +28,7 @@ public class GestionTablasMonitor {
     }
 
     public static void dibujarTablaMonitores(VistaInicioMonitores vInicio) {
-        String[] columnas = {"Código", "Nombre", "DNI", "Teléfono", "Correo", "Fecha Inc.", "Nick"};
+        String[] columnas = {"Código", "Nombre", "DNI", "Teléfono", "Correo", "Fecha Incorporación", "Nick"};
         modeloTablaMonitores.setColumnIdentifiers(columnas);
 
         // Referencia a la tabla de la vista gráfica
