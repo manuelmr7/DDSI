@@ -26,23 +26,11 @@ public class VistaInicioSocios extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
         jScrollPane2 = new javax.swing.JScrollPane();
         jTableSocios = new javax.swing.JTable();
-
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        jScrollPane1.setViewportView(jTable1);
+        nuevoSocio = new javax.swing.JButton();
+        bajaSocio = new javax.swing.JButton();
+        actualizarSocio = new javax.swing.JButton();
 
         jTableSocios.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -57,25 +45,53 @@ public class VistaInicioSocios extends javax.swing.JPanel {
         ));
         jScrollPane2.setViewportView(jTableSocios);
 
+        nuevoSocio.setText("Nuevo Socio");
+
+        bajaSocio.setText("Baja de Socio");
+        bajaSocio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                bajaSocioActionPerformed(evt);
+            }
+        });
+
+        actualizarSocio.setText("Actualización de Socio");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 631, Short.MAX_VALUE)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 619, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addGap(19, 19, 19)
+                .addComponent(nuevoSocio)
+                .addGap(100, 100, 100)
+                .addComponent(bajaSocio)
+                .addGap(98, 98, 98)
+                .addComponent(actualizarSocio)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 300, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 279, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(nuevoSocio)
+                    .addComponent(bajaSocio)
+                    .addComponent(actualizarSocio)))
         );
     }// </editor-fold>//GEN-END:initComponents
 
+    private void bajaSocioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bajaSocioActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_bajaSocioActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JScrollPane jScrollPane1;
+    public javax.swing.JButton actualizarSocio;
+    public javax.swing.JButton bajaSocio;
     private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JTable jTable1;
     public javax.swing.JTable jTableSocios;
+    public javax.swing.JButton nuevoSocio;
     // End of variables declaration//GEN-END:variables
 }

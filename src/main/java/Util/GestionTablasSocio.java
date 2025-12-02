@@ -8,7 +8,7 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class GestiónTablasSocio {
+public class GestionTablasSocio {
 
     public static DefaultTableModel modeloTablaSocios;
 
