@@ -23,4 +23,16 @@ public class ActividadDAO {
         Query<Actividad> q = session.createQuery("from Actividad", Actividad.class);
         return q.getResultList();
     }
+    public void insertarActividad(Session session,Actividad actividad) throws Exception
+    {
+        session.save(actividad);
+    }
+    public void borrarActividad(Session session,Actividad actividad) throws Exception
+    {
+        session.delete(actividad);
+    }
+    public void actualizarActividad(Session session,Actividad actividad) throws Exception
+    {
+        session.update(actividad);
+    }
 }
