@@ -290,7 +290,6 @@ public class ControladorActividad implements ActionListener {
             
             tr.commit();
             
-            // 5. Feedback al usuario y limpieza
             vistaMensajes.mostrarInfo("Actividad actualizada correctamente.");
             dialog.dispose(); // Cerramos la ventana de diálogo
             dibujaRellenaTablaActividades(); // Refrescamos la tabla principal para ver los cambios
@@ -300,7 +299,7 @@ public class ControladorActividad implements ActionListener {
             vistaMensajes.mostrarError("Error al actualizar la actividad en la base de datos.\nDetalle: " + ex.getMessage());
         } finally {
             if (sesion != null && sesion.isOpen()) {
-                sesion.close(); // Siempre cerramos la sesión
+                sesion.close();
             }
         }
     }

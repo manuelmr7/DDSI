@@ -31,6 +31,7 @@ public class VistaPrincipal extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jMenu1 = new javax.swing.JMenu();
         panelContenedor = new javax.swing.JPanel();
         menuBar = new javax.swing.JMenuBar();
         menuInicio = new javax.swing.JMenu();
@@ -41,8 +42,12 @@ public class VistaPrincipal extends javax.swing.JFrame {
         menuItemGestionSocios = new javax.swing.JMenuItem();
         menuActividades = new javax.swing.JMenu();
         menuItemGestionActividades = new javax.swing.JMenuItem();
+        menuInscripciones = new javax.swing.JMenu();
+        menuItemInscripciones = new javax.swing.JMenuItem();
         menuSalir = new javax.swing.JMenu();
         menuItemSalir = new javax.swing.JMenuItem();
+
+        jMenu1.setText("jMenu1");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Gestión del Gimnasio \"Body Perfect\"");
@@ -96,6 +101,13 @@ public class VistaPrincipal extends javax.swing.JFrame {
 
         menuBar.add(menuActividades);
 
+        menuInscripciones.setText("Inscripciones");
+
+        menuItemInscripciones.setText("Gestionar Inscripciones");
+        menuInscripciones.add(menuItemInscripciones);
+
+        menuBar.add(menuInscripciones);
+
         menuSalir.setText("Salir");
 
         menuItemSalir.setText("Salir");
@@ -127,13 +139,16 @@ public class VistaPrincipal extends javax.swing.JFrame {
      * @param args the command line arguments
      */
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenu jMenu1;
     public javax.swing.JMenu menuActividades;
     public javax.swing.JMenuBar menuBar;
     public javax.swing.JMenu menuInicio;
+    public javax.swing.JMenu menuInscripciones;
     public javax.swing.JMenuItem menuItemGestionActividades;
     public javax.swing.JMenuItem menuItemGestionMonitores;
     public javax.swing.JMenuItem menuItemGestionSocios;
     public javax.swing.JMenuItem menuItemInicio;
+    public javax.swing.JMenuItem menuItemInscripciones;
     public javax.swing.JMenuItem menuItemSalir;
     public javax.swing.JMenu menuMonitores;
     public javax.swing.JMenu menuSalir;

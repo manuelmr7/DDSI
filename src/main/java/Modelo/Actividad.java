@@ -175,5 +175,15 @@ public class Actividad implements Serializable {
     public String toString() {
         return "Modelo.Actividad[ idActividad=" + idActividad + " ]";
     }
+    public void agregarSocio(Socio socio)
+    {
+        this.socios.add(socio);
+        socio.getActividadSet().add(this);
+    }
+    public void eliminarSocio(Socio socio)
+    {
+        this.socios.remove(socio);
+        socio.getActividadSet().remove(this);
+    }
     
 }
