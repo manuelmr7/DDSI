@@ -347,8 +347,4 @@ public class ControladorActividad implements ActionListener {
         }
         return m;
     }
-
-    private MonitorDAO monitorDAO() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
-    }
 }

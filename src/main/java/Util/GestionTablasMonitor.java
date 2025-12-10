@@ -26,6 +26,8 @@ public class GestionTablasMonitor {
         // Asignamos el modelo a la tabla que está en la ventana gráfica
         vInicio.jTableMonitores.setModel(modeloTablaMonitores);
     }
+    
+    
 
     public static void dibujarTablaMonitores(VistaInicioMonitores vInicio) {
         String[] columnas = {"Código", "Nombre", "DNI", "Teléfono", "Correo", "Fecha Incorporación", "Nick"};
