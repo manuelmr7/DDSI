@@ -37,4 +37,16 @@ public class SocioDAO {
         Query<Socio> q = session.createQuery("from Socio", Socio.class);
         return q.getResultList();
     }
+    public void borrarSocio(Session session,Socio socio) throws Exception
+    {
+        session.delete(socio);
+    }
+    public void actualizarSocio(Session session,Socio socio) throws Exception
+    {
+        session.update(socio);
+    }
+    public String obtenerUltimoCodigo(Session session) {
+        org.hibernate.query.Query<String> q = session.createQuery("SELECT max(s.numeroSocio) FROM Socio s", String.class);
+        return q.getSingleResult();
+    }
 }

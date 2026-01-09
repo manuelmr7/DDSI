@@ -30,7 +30,7 @@ public class ControladorActividad implements ActionListener {
         this.vInicioActividades = vInicioActividades;
         this.sessionFactory = sessionFactory;
         this.actividadDAO = new ActividadDAO();
-        this.monitorDAO=monitorDAO();
+        this.monitorDAO=new MonitorDAO();
         this.vistaMensajes = new VistaMensajes();
 
         addListeners();
@@ -80,16 +80,16 @@ public class ControladorActividad implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
             case "NuevaActividad":
-                vistaMensajes.mostrarInfo("Funcionalidad Nueva Actividad en construcción");
+                nuevaActividad();
                 break;
             case "BajaActividad":
-                vistaMensajes.mostrarInfo("Funcionalidad Baja Actividad en construcción");
+                bajaActividad();
                 break;
             case "ActualizarActividad":
-                vistaMensajes.mostrarInfo("Funcionalidad Actualizar Actividad en construcción");
+                actualizarActividad();
                 break;
             case "VerInscripciones":
-                vistaMensajes.mostrarInfo("Selecciona una actividad para ver sus inscripciones (Próximamente)");
+                vistaMensajes.mostrarInfo("Para gestionar inscripciones, usa el menú 'Inscripciones'");
                 break;
         }
     }
@@ -199,7 +199,7 @@ public class ControladorActividad implements ActionListener {
             }
             
         }
-    private void actualizarActividad() throws Exception {
+    private void actualizarActividad(){
         int fila = vInicioActividades.jTableActividades.getSelectedRow();
         if (fila == -1) {
             vistaMensajes.mostrarAdvertencia("Seleccione una actividad");
@@ -212,7 +212,12 @@ public class ControladorActividad implements ActionListener {
         try {
             sesion = sessionFactory.openSession();
             a = actividadDAO.buscarPorId(sesion, id);
-        } finally {
+        }
+        catch(Exception e)
+        {
+            vistaMensajes.mostrarError("Error al actualizar actividad: "+e.getMessage());
+        }
+        finally {
             if (sesion != null && sesion.isOpen()) sesion.close();
         }
 
@@ -346,4 +351,7 @@ public class ControladorActividad implements ActionListener {
         }
         return m;
     }
+    
+    
+
 }
