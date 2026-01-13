@@ -15,6 +15,13 @@ import javax.swing.DefaultListModel;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+/**
+ * Controlador de la ventana modal de Inscripciones.
+ * Gestiona la lógica para matricular a un socio en una actividad o
+ * darlo de baja, actualizando las listas visuales en tiempo real.
+ *
+ * @author manue
+ */
 
 public class ControladorInscripciones implements ActionListener {
 
@@ -32,17 +39,14 @@ public class ControladorInscripciones implements ActionListener {
         this.actividadDAO = new ActividadDAO();
         this.vistaMensajes = new VistaMensajes();
 
-        // Listeners
         this.vInscripciones.botonAlta.addActionListener(this);
         this.vInscripciones.botonAlta.setActionCommand("Alta");
         
         this.vInscripciones.botonBaja.addActionListener(this);
         this.vInscripciones.botonBaja.setActionCommand("Baja");
         
-        // Listener para cuando cambiamos de socio en el combo
         this.vInscripciones.comboSocios.addActionListener(e -> cargarListasActividades());
 
-        // Carga inicial
         cargarSocios();
     }
 
@@ -58,7 +62,6 @@ public class ControladorInscripciones implements ActionListener {
             }
             vInscripciones.comboSocios.setModel(model);
             
-            // Si hay socios, cargamos las listas del primero
             if (model.getSize() > 0) {
                 vInscripciones.comboSocios.setSelectedIndex(0);
                 cargarListasActividades();
@@ -81,24 +84,19 @@ public class ControladorInscripciones implements ActionListener {
         try {
             sesion = sessionFactory.openSession();
             
-            // Recuperamos el socio completo (con sus actividades)
             Socio socio = socioDAO.buscarPorNumeroSocio(sesion, codSocio);
             
-            // Recuperamos TODAS las actividades
             List<Actividad> todas = actividadDAO.listaActividades(sesion);
             
-            // Listas para la interfaz
             DefaultListModel<String> modelInscritas = new DefaultListModel<>();
             DefaultListModel<String> modelDisponibles = new DefaultListModel<>();
             
             Set<Actividad> inscritas = socio.getActividadSet();
             
-            // Rellenar inscritas
             for (Actividad a : inscritas) {
                 modelInscritas.addElement(a.getIdActividad() + " - " + a.getNombre());
             }
             
-            // Rellenar disponibles (Todas - Inscritas)
             for (Actividad a : todas) {
                 if (!inscritas.contains(a)) {
                     modelDisponibles.addElement(a.getIdActividad() + " - " + a.getNombre());
@@ -140,13 +138,12 @@ public class ControladorInscripciones implements ActionListener {
             Socio s = socioDAO.buscarPorNumeroSocio(sesion, codSocio);
             Actividad a = actividadDAO.buscarPorId(sesion, codActividad);
             
-            // Usamos el método helper que añadimos a Actividad
             a.agregarSocio(s);
             
-            sesion.update(a); // Guardamos cambios
+            sesion.update(a); 
             tr.commit();
             
-            cargarListasActividades(); // Refrescar interfaz
+            cargarListasActividades();
             
         } catch (Exception ex) {
             if (tr != null) tr.rollback();
@@ -172,7 +169,6 @@ public class ControladorInscripciones implements ActionListener {
             Socio s = socioDAO.buscarPorNumeroSocio(sesion, codSocio);
             Actividad a = actividadDAO.buscarPorId(sesion, codActividad);
             
-            // Usamos el método helper
             a.eliminarSocio(s);
             
             sesion.update(a);

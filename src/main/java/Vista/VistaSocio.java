@@ -2,6 +2,10 @@ package Vista;
 
 import Modelo.Socio;
 import java.util.List;
+/**
+ * 
+ * @author manue
+ */
 
 public class VistaSocio {
     

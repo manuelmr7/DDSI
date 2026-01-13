@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package Modelo;
 
 import javax.persistence.Basic;
@@ -17,8 +13,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ * Entidad que representa a un Monitor del gimnasio. Mapeada a la tabla
+ * "MONITOR" de la base de datos. Incluye consultas predefinidas para buscar por
+ * distintos campos.
  *
- * @author manue
+ * * @author manue
  */
 @Entity
 @Table(name = "MONITOR")
@@ -34,112 +33,220 @@ import java.util.Set;
 public class Monitor implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    /**
+     * Código único del monitor (Clave Primaria).
+     */
     @Id
     @Basic(optional = false)
     @Column(name = "codMonitor")
     private String codMonitor;
+
+    /**
+     * Nombre completo del monitor.
+     */
     @Basic(optional = false)
     @Column(name = "nombre")
     private String nombre;
+
+    /**
+     * Documento Nacional de Identidad.
+     */
     @Basic(optional = false)
     @Column(name = "dni")
     private String dni;
+
+    /**
+     * Teléfono de contacto.
+     */
     @Column(name = "telefono")
     private String telefono;
+
+    /**
+     * Correo electrónico.
+     */
     @Column(name = "correo")
     private String correo;
+
+    /**
+     * Fecha de incorporación al gimnasio.
+     */
     @Basic(optional = false)
     @Column(name = "fechaEntrada")
     private String fechaEntrada;
+
+    /**
+     * Apodo o nick del monitor.
+     */
     @Column(name = "nick")
     private String nick;
-    @OneToMany(mappedBy = "monitorResponsable")
-    private Set<Actividad> actividadesResponsable=new HashSet<Actividad>();
 
+    /**
+     * Lista de actividades de las que este monitor es responsable.
+     */
+    @OneToMany(mappedBy = "monitorResponsable")
+    private Set<Actividad> actividadesResponsable = new HashSet<Actividad>();
+
+    /**
+     * Constructor vacío requerido por JPA.
+     */
     public Monitor() {
     }
 
+    /**
+     * Constructor con la clave primaria.
+     *
+     * @param codMonitor Código del monitor.
+     */
     public Monitor(String codMonitor) {
         this.codMonitor = codMonitor;
     }
 
+    /**
+     * Constructor con campos obligatorios.
+     *
+     * @param codMonitor Código.
+     * @param nombre Nombre.
+     * @param dni DNI.
+     * @param fechaEntrada Fecha de entrada.
+     */
     public Monitor(String codMonitor, String nombre, String dni, String fechaEntrada) {
         this.codMonitor = codMonitor;
         this.nombre = nombre;
         this.dni = dni;
         this.fechaEntrada = fechaEntrada;
     }
-    public Monitor(String codMonitor,String nombre, String dni, String telefono, String correo, String fechaEntrada, String nick)
-    {
-        this.codMonitor=codMonitor;
-        this.nombre=nombre;
-        this.dni=dni;
-        this.telefono=telefono;
-        this.correo=correo;
-        this.fechaEntrada=fechaEntrada;
-        this.nick=nick;
+
+    /**
+     * Constructor completo.
+     *
+     * @param codMonitor Código.
+     * @param nombre Nombre.
+     * @param dni DNI.
+     * @param telefono Teléfono.
+     * @param correo Correo.
+     * @param fechaEntrada Fecha de entrada.
+     * @param nick Nick.
+     */
+    public Monitor(String codMonitor, String nombre, String dni, String telefono, String correo, String fechaEntrada, String nick) {
+        this.codMonitor = codMonitor;
+        this.nombre = nombre;
+        this.dni = dni;
+        this.telefono = telefono;
+        this.correo = correo;
+        this.fechaEntrada = fechaEntrada;
+        this.nick = nick;
     }
 
+    // --- Getters y Setters Documentados ---
+    /**
+     * @return El código del monitor.
+     */
     public String getCodMonitor() {
         return codMonitor;
     }
 
+    /**
+     * @param codMonitor Nuevo código.
+     */
     public void setCodMonitor(String codMonitor) {
         this.codMonitor = codMonitor;
     }
 
+    /**
+     * @return El nombre del monitor.
+     */
     public String getNombre() {
         return nombre;
     }
 
+    /**
+     * @param nombre Nuevo nombre.
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * @return El DNI.
+     */
     public String getDni() {
         return dni;
     }
 
+    /**
+     * @param dni Nuevo DNI.
+     */
     public void setDni(String dni) {
         this.dni = dni;
     }
 
+    /**
+     * @return El teléfono.
+     */
     public String getTelefono() {
         return telefono;
     }
 
+    /**
+     * @param telefono Nuevo teléfono.
+     */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
+    /**
+     * @return El correo electrónico.
+     */
     public String getCorreo() {
         return correo;
     }
 
+    /**
+     * @param correo Nuevo correo.
+     */
     public void setCorreo(String correo) {
         this.correo = correo;
     }
 
+    /**
+     * @return La fecha de entrada.
+     */
     public String getFechaEntrada() {
         return fechaEntrada;
     }
 
+    /**
+     * @param fechaEntrada Nueva fecha.
+     */
     public void setFechaEntrada(String fechaEntrada) {
         this.fechaEntrada = fechaEntrada;
     }
 
+    /**
+     * @return El nick o apodo.
+     */
     public String getNick() {
         return nick;
     }
 
+    /**
+     * @param nick Nuevo nick.
+     */
     public void setNick(String nick) {
         this.nick = nick;
     }
 
+    /**
+     * @return Conjunto de actividades que imparte.
+     */
     public Set<Actividad> getActividadSet() {
         return actividadesResponsable;
     }
 
+    /**
+     * @param actividadesResponsable Nuevo conjunto de actividades.
+     */
     public void setActividadSet(Set<Actividad> actividadesResponsable) {
         this.actividadesResponsable = actividadesResponsable;
     }
@@ -153,7 +260,6 @@ public class Monitor implements Serializable {
 
     @Override
     public boolean equals(Object object) {
-        // TODO: Warning - this method won't work in the case the id fields are not set
         if (!(object instanceof Monitor)) {
             return false;
         }
@@ -164,9 +270,14 @@ public class Monitor implements Serializable {
         return true;
     }
 
+    /**
+     * Devuelve el nombre del monitor para mostrarlo correctamente en los
+     * desplegables (ComboBox).
+     *
+     * @return Nombre del monitor.
+     */
     @Override
     public String toString() {
-        return "Modelo.Monitor[ codMonitor=" + codMonitor + " ]";
+        return nombre;
     }
-    
 }

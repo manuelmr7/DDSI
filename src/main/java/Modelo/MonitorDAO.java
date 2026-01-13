@@ -3,7 +3,10 @@ package Modelo;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import java.util.List;
-
+/**
+ * 
+ * @author manue
+ */
 public class MonitorDAO {
     public MonitorDAO() {}
     
@@ -25,7 +28,6 @@ public class MonitorDAO {
         return query.uniqueResult();
     }
     public List<Monitor> listaMonitores(Session session) {
-        // HQL: Selecciona todos los objetos de la clase Monitor
         Query<Monitor> q = session.createQuery("from Monitor", Monitor.class);
         return q.getResultList();
     }

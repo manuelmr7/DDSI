@@ -2,6 +2,10 @@ package Vista;
 
 import Modelo.Monitor;
 import java.util.List;
+/**
+ * 
+ * @author manue
+ */
 
 public class VistaMonitor {
     

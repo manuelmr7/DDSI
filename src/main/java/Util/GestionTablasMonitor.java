@@ -6,16 +6,17 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import java.util.List;
 import Modelo.Monitor;
-// IMPORTANTE: Importamos la vista gráfica correcta
 import Vista.VistaInicioMonitores; 
+/**
+ * 
+ * @author manue
+ */
 
 public class GestionTablasMonitor {
 
     public static DefaultTableModel modeloTablaMonitores;
 
-    /**
-     * Inicializa la tabla en la vista gráfica de listado (VistaInicioMonitores)
-     */
+    
     public static void inicializarTablaMonitores(VistaInicioMonitores vInicio) {
         modeloTablaMonitores = new DefaultTableModel() {
             @Override
@@ -23,7 +24,6 @@ public class GestionTablasMonitor {
                 return false;
             }
         };
-        // Asignamos el modelo a la tabla que está en la ventana gráfica
         vInicio.jTableMonitores.setModel(modeloTablaMonitores);
     }
     
@@ -33,7 +33,6 @@ public class GestionTablasMonitor {
         String[] columnas = {"Código", "Nombre", "DNI", "Teléfono", "Correo", "Fecha Incorporación", "Nick"};
         modeloTablaMonitores.setColumnIdentifiers(columnas);
 
-        // Referencia a la tabla de la vista gráfica
         JTable t = vInicio.jTableMonitores;
         
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);

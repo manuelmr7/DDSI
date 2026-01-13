@@ -7,6 +7,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+/**
+ * 
+ * @author manue
+ */
 
 public class GestionTablasActividad {
 
@@ -32,7 +36,6 @@ public class GestionTablasActividad {
         t.getTableHeader().setReorderingAllowed(false);
         t.setAutoCreateRowSorter(true);
 
-        // Ajusta los anchos según el contenido
         int[] anchuras = {60, 150, 80, 50, 50, 200};
         TableColumnModel modeloColumna = t.getColumnModel();
 
@@ -51,7 +54,6 @@ public class GestionTablasActividad {
             fila[2] = a.getDia();
             fila[3] = a.getHora();
             fila[4] = a.getPrecioBaseMes();
-            // Obtenemos el nombre del monitor responsable (controlando nulos)
             if (a.getMonitorResponsable() != null) {
                 fila[5] = a.getMonitorResponsable().getNombre();
             } else {

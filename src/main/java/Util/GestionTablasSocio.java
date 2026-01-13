@@ -7,34 +7,31 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
+/**
+ * 
+ * @author manue
+ */
 
 public class GestionTablasSocio {
 
     public static DefaultTableModel modeloTablaSocios;
 
-    /**
-     * Inicializa la tabla en la vista gráfica de listado (VistaInicioSocios).
-     * Asegúrate de haber renombrado la tabla en la vista a 'jTableSocios'.
-     */
+  
     public static void inicializarTablaSocios(VistaInicioSocios vInicio) {
         modeloTablaSocios = new DefaultTableModel() {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Hacemos que las celdas no sean editables
+                return false;
             }
         };
-        // Asignamos el modelo a la tabla gráfica
         vInicio.jTableSocios.setModel(modeloTablaSocios);
     }
 
-    /**
-     * Define la estructura de columnas y sus anchos visuales.
-     */
+
     public static void dibujarTablaSocios(VistaInicioSocios vInicio) {
         String[] columnas = {"Socio", "Nombre", "DNI", "Fecha Nac.", "Teléfono", "Correo", "Fecha Alta", "Cat."};
         modeloTablaSocios.setColumnIdentifiers(columnas);
 
-        // Referencia a la tabla de la vista gráfica
         JTable t = vInicio.jTableSocios;
 
         t.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
@@ -42,7 +39,6 @@ public class GestionTablasSocio {
         t.getTableHeader().setReorderingAllowed(false);
         t.setAutoCreateRowSorter(true);
 
-        // Definimos anchos estimados para que quede bien visualmente
         int[] anchuras = {50, 200, 90, 100, 90, 200, 100, 40};
         TableColumnModel modeloColumna = t.getColumnModel();
 
@@ -53,11 +49,9 @@ public class GestionTablasSocio {
         }
     }
 
-    /**
-     * Rellena la tabla con una lista de objetos Socio.
-     */
+
     public static void rellenarTablaSocios(List<Socio> socios) {
-        Object[] fila = new Object[8]; // 8 columnas
+        Object[] fila = new Object[8];
         for (Socio s : socios) {
             fila[0] = s.getNumeroSocio();
             fila[1] = s.getNombre();
@@ -66,14 +60,11 @@ public class GestionTablasSocio {
             fila[4] = s.getTelefono();
             fila[5] = s.getCorreo();
             fila[6] = s.getFechaEntrada();
-            fila[7] = s.getCategoria(); // Asumimos que es un Character
+            fila[7] = s.getCategoria();
             modeloTablaSocios.addRow(fila);
         }
     }
 
-    /**
-     * Vacía el contenido de la tabla.
-     */
     public static void vaciarTablaSocios() {
         modeloTablaSocios.setRowCount(0);
     }

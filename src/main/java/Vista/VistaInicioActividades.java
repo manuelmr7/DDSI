@@ -1,7 +1,4 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
+
 package Vista;
 
 /**
@@ -32,6 +29,10 @@ public class VistaInicioActividades extends javax.swing.JPanel {
         bajaActividad = new javax.swing.JButton();
         actualizarActividad = new javax.swing.JButton();
         verInscripciones = new javax.swing.JButton();
+        textoBuscar = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        botonBuscar = new javax.swing.JButton();
+        botonEstadisticas = new javax.swing.JButton();
 
         jTableActividades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -54,6 +55,23 @@ public class VistaInicioActividades extends javax.swing.JPanel {
 
         verInscripciones.setText("Ver Inscripciones");
 
+        textoBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                textoBuscarActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Buscar Actividad");
+
+        botonBuscar.setText("Ok");
+        botonBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                botonBuscarActionPerformed(evt);
+            }
+        });
+
+        botonEstadisticas.setText("Estadísticas");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -62,7 +80,15 @@ public class VistaInicioActividades extends javax.swing.JPanel {
                 .addComponent(nuevaActividad)
                 .addGap(31, 31, 31)
                 .addComponent(bajaActividad)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 20, Short.MAX_VALUE)
+                .addGap(37, 37, 37)
+                .addComponent(jLabel1)
+                .addGap(18, 18, 18)
+                .addComponent(textoBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(botonBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(39, 39, 39)
+                .addComponent(botonEstadisticas)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 49, Short.MAX_VALUE)
                 .addComponent(actualizarActividad)
                 .addGap(18, 18, 18)
                 .addComponent(verInscripciones))
@@ -77,17 +103,33 @@ public class VistaInicioActividades extends javax.swing.JPanel {
                     .addComponent(nuevaActividad)
                     .addComponent(bajaActividad)
                     .addComponent(actualizarActividad)
-                    .addComponent(verInscripciones)))
+                    .addComponent(verInscripciones)
+                    .addComponent(textoBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel1)
+                    .addComponent(botonBuscar)
+                    .addComponent(botonEstadisticas)))
         );
     }// </editor-fold>//GEN-END:initComponents
+
+    private void textoBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_textoBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_textoBuscarActionPerformed
+
+    private void botonBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_botonBuscarActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_botonBuscarActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     public javax.swing.JButton actualizarActividad;
     public javax.swing.JButton bajaActividad;
+    public javax.swing.JButton botonBuscar;
+    public javax.swing.JButton botonEstadisticas;
+    private javax.swing.JLabel jLabel1;
     private javax.swing.JScrollPane jScrollPane1;
     public javax.swing.JTable jTableActividades;
     public javax.swing.JButton nuevaActividad;
+    public javax.swing.JTextField textoBuscar;
     public javax.swing.JButton verInscripciones;
     // End of variables declaration//GEN-END:variables
 }

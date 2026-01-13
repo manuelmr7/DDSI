@@ -7,7 +7,13 @@ import org.hibernate.SessionFactory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JOptionPane;
-
+/**
+ * Controlador de inicio de sesión.
+ * Gestiona el establecimiento de la conexión inicial con la base de datos MariaDB
+ * utilizando las credenciales introducidas por el usuario.
+ *
+ * @author manue
+ */
 public class ControladorConexion implements ActionListener {
     private VistaConexion vistaConexion;
     private VistaMensajes vistaMensajes;
@@ -28,7 +34,6 @@ public class ControladorConexion implements ActionListener {
     }
 
     private void addListeners() {
-        // Usando tus nombres de variables
         vistaConexion.botonEntrar.addActionListener(this);
         vistaConexion.botonCancelar.addActionListener(this);
     }

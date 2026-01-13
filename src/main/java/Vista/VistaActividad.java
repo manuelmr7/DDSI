@@ -3,6 +3,10 @@ package Vista;
 import Modelo.Actividad;
 import Modelo.Socio;
 import java.util.List;
+/**
+ * 
+ * @author manue
+ */
 
 public class VistaActividad {
     

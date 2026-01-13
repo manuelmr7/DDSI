@@ -5,7 +5,7 @@ import Modelo.MonitorDAO;
 import Util.GestionTablasMonitor;
 import Vista.VistaInicioMonitores;
 import Vista.VistaMensajes;
-import Vista.VistaMonitorDialog; // Importamos el diálogo nuevo
+import Vista.VistaMonitorDialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -13,6 +13,13 @@ import javax.swing.JOptionPane;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+/**
+ * Controlador para la gestión de Monitores.
+ * Se encarga de la lógica CRUD (Crear, Leer, Actualizar, Borrar) de los monitores
+ * y actualiza la tabla de la interfaz gráfica correspondiente.
+ *
+ * @author manue
+ */
 
 public class ControladorMonitor implements ActionListener {
 
@@ -77,23 +84,18 @@ public class ControladorMonitor implements ActionListener {
                 break;
         }
     }
-
-    // --- LÓGICA DE NUEVO MONITOR ---
     private void nuevoMonitor() {
         VistaMonitorDialog dialog = new VistaMonitorDialog();
         dialog.setTitle("Nuevo Monitor");
         
-        // Calcular siguiente código
         String nuevoCodigo = calcularSiguienteCodigo();
         dialog.textoCodigo.setText(nuevoCodigo);
-        dialog.textoCodigo.setEditable(false); // El código no se toca
+        dialog.textoCodigo.setEditable(false);
         
-        // Listener del botón Aceptar del diálogo
         dialog.botonAceptar.addActionListener(evt -> {
             insertarMonitorEnBD(dialog);
         });
         
-        // Listener del botón Cancelar
         dialog.botonCancelar.addActionListener(evt -> dialog.dispose());
         
         dialog.setLocationRelativeTo(null);
@@ -118,8 +120,8 @@ public class ControladorMonitor implements ActionListener {
             tr.commit();
             
             vistaMensajes.mostrarInfo("Monitor insertado correctamente");
-            dialog.dispose(); // Cerrar ventana
-            dibujaRellenaTablaMonitores(); // Refrescar tabla
+            dialog.dispose();
+            dibujaRellenaTablaMonitores(); 
             
         } catch (Exception ex) {
             if (tr != null) tr.rollback();
@@ -129,23 +131,18 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
-    // --- LÓGICA DE BAJA MONITOR ---
     private void bajaMonitor() {
-        // 1. Verificar selección
         int fila = vInicioMonitores.jTableMonitores.getSelectedRow();
         if (fila == -1) {
             vistaMensajes.mostrarAdvertencia("Seleccione un monitor para borrar");
             return;
         }
         
-        // 2. Obtener código
         String codigo = (String) vInicioMonitores.jTableMonitores.getValueAt(fila, 0);
         
-        // 3. Confirmación
         int opt = JOptionPane.showConfirmDialog(null, "¿Seguro que quieres borrar al monitor " + codigo + "?");
         if (opt != JOptionPane.YES_OPTION) return;
 
-        // 4. Borrar en BD
         Transaction tr = null;
         try {
             sesion = sessionFactory.openSession();
@@ -154,7 +151,7 @@ public class ControladorMonitor implements ActionListener {
             if (m != null) {
                 monitorDAO.borrarMonitor(sesion, m);
                 tr.commit();
-                dibujaRellenaTablaMonitores(); // Refrescar
+                dibujaRellenaTablaMonitores();
             }
         } catch (Exception ex) {
             if (tr != null) tr.rollback();
@@ -164,7 +161,6 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
-    // --- LÓGICA DE ACTUALIZAR MONITOR ---
     private void actualizarMonitor() {
         int fila = vInicioMonitores.jTableMonitores.getSelectedRow();
         if (fila == -1) {
@@ -172,10 +168,8 @@ public class ControladorMonitor implements ActionListener {
             return;
         }
         
-        // 1. Obtener datos de la fila seleccionada
         String codigo = (String) vInicioMonitores.jTableMonitores.getValueAt(fila, 0);
         
-        // 2. Cargar datos desde BD (más seguro que desde la tabla)
         Transaction tr = null;
         Monitor m = null;
         try {
@@ -187,11 +181,10 @@ public class ControladorMonitor implements ActionListener {
         
         if (m == null) return;
 
-        // 3. Abrir diálogo y rellenar datos
         VistaMonitorDialog dialog = new VistaMonitorDialog();
         dialog.setTitle("Actualizar Monitor");
         dialog.textoCodigo.setText(m.getCodMonitor());
-        dialog.textoCodigo.setEditable(false); // PK no se toca
+        dialog.textoCodigo.setEditable(false); 
         
         dialog.textoNombre.setText(m.getNombre());
         dialog.textoDni.setText(m.getDni());
@@ -217,7 +210,6 @@ public class ControladorMonitor implements ActionListener {
             sesion = sessionFactory.openSession();
             tr = sesion.beginTransaction();
             
-            // Creamos objeto con los datos nuevos
             Monitor m = new Monitor();
             m.setCodMonitor(dialog.textoCodigo.getText());
             m.setNombre(dialog.textoNombre.getText());
@@ -242,7 +234,6 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
-    // --- MÉTODO AUXILIAR PARA CALCULAR CÓDIGO ---
     private String calcularSiguienteCodigo() {
         Transaction tr = null;
         String maxCod = null;
@@ -250,20 +241,18 @@ public class ControladorMonitor implements ActionListener {
             sesion = sessionFactory.openSession();
             maxCod = monitorDAO.obtenerUltimoCodigo(sesion);
         } catch(Exception e) {
-            // Si la tabla está vacía o falla
         } finally {
             if (sesion != null && sesion.isOpen()) sesion.close();
         }
         
         if (maxCod == null) return "M001";
         
-        // Logica simple: Extraer número y sumar 1 (M010 -> 10 -> 11 -> M011)
         try {
             String numPart = maxCod.substring(1);
             int num = Integer.parseInt(numPart) + 1;
-            return String.format("M%03d", num); // M + 3 dígitos con ceros a la izquierda
+            return String.format("M%03d", num);
         } catch (Exception e) {
-            return "M999"; // Fallback por si el formato no es estándar
+            return "M999"; 
         }
     }
 }

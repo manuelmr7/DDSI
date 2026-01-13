@@ -1,17 +1,19 @@
 package Vista;
 
 import javax.swing.JOptionPane;
+/**
+ * 
+ * @author manue
+ */
 
 public class VistaMensajes {
     
-    // Método del PDF
     public void mensajeConsola(String texto) {
         System.out.println("***********");
         System.out.println(texto);
         System.out.println("***********");
     }
     
-    // Métodos para JOptionPane
     public void mostrarInfo(String mensaje) {
         JOptionPane.showMessageDialog(null, mensaje, "Información", JOptionPane.INFORMATION_MESSAGE);
     }
