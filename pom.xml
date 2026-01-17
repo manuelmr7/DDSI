@@ -8,7 +8,7 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.release>24</maven.compiler.release>
-        <exec.mainClass>ddsi.prueba.MAIN</exec.mainClass>
+        <exec.mainClass>Aplicacion.MAIN</exec.mainClass>
     </properties>
     <dependencies>
         

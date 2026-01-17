@@ -1,4 +1,4 @@
-package ddsi.prueba;
+package Aplicacion;
 
 import Controlador.ControladorConexion;
 import com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme;

@@ -16,14 +16,14 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
 /**
- * Controlador para la gestión de Socios.
- * Maneja las operaciones de alta, baja, modificación y listado de socios,
- * incluyendo validaciones de formato para DNI y Teléfono.
+ * Controlador para la gestión de Socios. Maneja las operaciones de alta, baja,
+ * modificación y listado de socios, incluyendo validaciones de formato para DNI
+ * y Teléfono.
  *
  * @author Manuel Martín Rodrigo
  */
 public class ControladorSocio implements ActionListener {
-    
+
     private final SessionFactory sessionFactory;
     private final VistaInicioSocios vInicioSocios;
     private final SocioDAO socioDAO;
@@ -31,8 +31,8 @@ public class ControladorSocio implements ActionListener {
     private Session sesion;
 
     /**
-     * Constructor del controlador.
-     * Inicializa la vista, el DAO y configura la tabla de socios.
+     * Constructor del controlador. Inicializa la vista, el DAO y configura la
+     * tabla de socios.
      *
      * @param vInicioSocios Vista principal de gestión de socios.
      * @param sessionFactory Fábrica de sesiones de Hibernate.
@@ -42,45 +42,47 @@ public class ControladorSocio implements ActionListener {
         this.sessionFactory = sessionFactory;
         this.socioDAO = new SocioDAO();
         this.vistaMensajes = new VistaMensajes();
-        
+
         addListeners();
         dibujaRellenaTablaSocios();
     }
-    
+
     /**
      * Asigna los listeners a los botones de la vista.
      */
     private void addListeners() {
         vInicioSocios.nuevoSocio.addActionListener(this);
         vInicioSocios.nuevoSocio.setActionCommand("NuevoSocio");
-        
+
         vInicioSocios.bajaSocio.addActionListener(this);
         vInicioSocios.bajaSocio.setActionCommand("BajaSocio");
-        
+
         vInicioSocios.actualizarSocio.addActionListener(this);
         vInicioSocios.actualizarSocio.setActionCommand("ActualizarSocio");
     }
-    
+
     /**
      * Configura y rellena la tabla de socios con los datos de la base de datos.
      */
     private void dibujaRellenaTablaSocios() {
         GestionTablasSocio.inicializarTablaSocios(vInicioSocios);
         GestionTablasSocio.dibujarTablaSocios(vInicioSocios);
-        
+
         Transaction tr = null;
         try {
             sesion = sessionFactory.openSession();
             tr = sesion.beginTransaction();
-            
+
             List<Socio> listaSocios = socioDAO.listaSocios(sesion);
-            
+
             GestionTablasSocio.vaciarTablaSocios();
             GestionTablasSocio.rellenarTablaSocios(listaSocios);
-            
+
             tr.commit();
         } catch (Exception ex) {
-            if (tr != null) tr.rollback();
+            if (tr != null) {
+                tr.rollback();
+            }
             vistaMensajes.mostrarError("Error al recuperar los socios: " + ex.getMessage());
         } finally {
             if (sesion != null && sesion.isOpen()) {
@@ -91,6 +93,7 @@ public class ControladorSocio implements ActionListener {
 
     /**
      * Maneja los eventos de los botones.
+     *
      * @param e Evento disparado.
      */
     @Override
@@ -109,19 +112,19 @@ public class ControladorSocio implements ActionListener {
     }
 
     /**
-     * Abre el diálogo para registrar un nuevo socio.
-     * Calcula automáticamente el siguiente código disponible.
+     * Abre el diálogo para registrar un nuevo socio. Calcula automáticamente el
+     * siguiente código disponible.
      */
     private void nuevoSocio() {
         VistaSocioDialog dialog = new VistaSocioDialog();
         dialog.setTitle("Nuevo Socio");
-        
+
         String nuevoCodigo = calcularSiguienteCodigo();
         dialog.textoNumeroSocio.setText(nuevoCodigo);
         dialog.textoNumeroSocio.setEditable(false);
-        
+
         cargarCategorias(dialog);
-        
+
         dialog.botonAceptar.addActionListener(evt -> {
             // Validamos antes de insertar
             if (validarDatos(dialog)) {
@@ -129,36 +132,72 @@ public class ControladorSocio implements ActionListener {
             }
         });
         dialog.botonCancelar.addActionListener(evt -> dialog.dispose());
-        
+
         dialog.setLocationRelativeTo(null);
-        dialog.setVisible(true); 
+        dialog.setVisible(true);
     }
 
     /**
-     * Valida los datos introducidos en el formulario de Socio.
-     * Comprueba formato de DNI y longitud de teléfono.
+     * Valida los datos introducidos en el formulario de Socio. Verifica
+     * integridad, formatos y reglas de negocio (edad). * Validaciones
+     * incluidas: - Campos obligatorios vacíos. - Formato de DNI: 8
+     * dígitos + Letra. - Formato de Correo: Patrón estándar
+     * . - Longitud de Teléfono: 9 dígitos. - Fecha de Entrada:
+     * Anterior a la actual. - Mayoría de Edad: El socio debe tener
+     * +18 años.
      *
-     * @param dialog Diálogo con los campos de texto.
-     * @return true si los datos son correctos, false si hay errores.
+     * * @param dialog Diálogo que contiene los campos de texto a validar.
+     * @return true si cumple todas las reglas, false en caso contrario.
      */
     private boolean validarDatos(VistaSocioDialog dialog) {
         // 1. Campos obligatorios
-        if (dialog.textoNombre.getText().trim().isEmpty() || 
-            dialog.textoDNI.getText().trim().isEmpty() ||
-            dialog.textoCorreo.getText().trim().isEmpty()) {
-            vistaMensajes.mostrarAdvertencia("El Nombre, DNI y Correo son obligatorios.");
+        if (dialog.textoNombre.getText().trim().isEmpty()
+                || dialog.textoDNI.getText().trim().isEmpty()
+                || dialog.textoCorreo.getText().trim().isEmpty()) {
+            vistaMensajes.mostrarAdvertencia("Todos los campos obligatorios deben estar rellenos.");
             return false;
         }
 
-        // 2. Validación de DNI (8 dígitos y 1 letra mayúscula)
+        // 2. Validación DNI
         if (!dialog.textoDNI.getText().matches("\\d{8}[A-Z]")) {
-            vistaMensajes.mostrarError("El DNI debe tener 8 números y una letra mayúscula (Ej: 12345678Z).");
+            vistaMensajes.mostrarError("DNI inválido. Debe tener 8 dígitos y una letra mayúscula.");
             return false;
         }
 
-        // 3. Validación de Teléfono (9 dígitos numéricos)
+        // 3. Validación Teléfono
         if (!dialog.textoTelefono.getText().matches("\\d{9}")) {
-            vistaMensajes.mostrarError("El teléfono debe constar de 9 dígitos.");
+            vistaMensajes.mostrarError("Teléfono inválido. Se requieren 9 dígitos.");
+            return false;
+        }
+
+        // 4. Validación Correo
+        if (!dialog.textoCorreo.getText().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            vistaMensajes.mostrarError("El correo electrónico no tiene un formato válido.");
+            return false;
+        }
+
+        // 5. Validaciones de Fechas y Edad 
+        try {
+            java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+            // a) Fecha Entrada
+            java.time.LocalDate fechaEntrada = java.time.LocalDate.parse(dialog.textoFechaEntrada.getText(), fmt);
+            if (fechaEntrada.isAfter(java.time.LocalDate.now())) {
+                vistaMensajes.mostrarError("La fecha de entrada no puede ser futura.");
+                return false;
+            }
+
+            // b) Mayoría de Edad
+            java.time.LocalDate fechaNac = java.time.LocalDate.parse(dialog.textoFechaNac.getText(), fmt);
+            long edad = java.time.temporal.ChronoUnit.YEARS.between(fechaNac, java.time.LocalDate.now());
+
+            if (edad < 18) {
+                vistaMensajes.mostrarError("El socio debe ser mayor de edad (+18 años) para inscribirse.");
+                return false;
+            }
+
+        } catch (Exception e) {
+            vistaMensajes.mostrarError("Error en las fechas. Asegúrese de usar el formato DD/MM/AAAA.");
             return false;
         }
 
@@ -167,6 +206,7 @@ public class ControladorSocio implements ActionListener {
 
     /**
      * Inserta el socio en la base de datos tras la validación.
+     *
      * @param dialog Diálogo con los datos.
      */
     private void insertarSocioEnBD(VistaSocioDialog dialog) {
@@ -178,9 +218,9 @@ public class ControladorSocio implements ActionListener {
         s.setDni(dialog.textoDNI.getText());
         s.setFechaNacimiento(dialog.textoFechaNac.getText());
         s.setTelefono(dialog.textoTelefono.getText());
-        
+
         String cat = (String) dialog.comboCategoria.getSelectedItem();
-        if(cat != null && !cat.isEmpty()) {
+        if (cat != null && !cat.isEmpty()) {
             s.setCategoria(cat.charAt(0));
         }
 
@@ -190,15 +230,19 @@ public class ControladorSocio implements ActionListener {
             tr = sesion.beginTransaction();
             socioDAO.insertaSocio(sesion, s);
             tr.commit();
-            
+
             vistaMensajes.mostrarInfo("Socio creado correctamente.");
             dialog.dispose();
             dibujaRellenaTablaSocios();
-        } catch(Exception ex) {
-            if(tr != null) tr.rollback();
+        } catch (Exception ex) {
+            if (tr != null) {
+                tr.rollback();
+            }
             vistaMensajes.mostrarError("Error al insertar: " + ex.getMessage());
         } finally {
-            if(sesion != null && sesion.isOpen()) sesion.close();
+            if (sesion != null && sesion.isOpen()) {
+                sesion.close();
+            }
         }
     }
 
@@ -207,30 +251,36 @@ public class ControladorSocio implements ActionListener {
      */
     private void bajaSocio() {
         int fila = vInicioSocios.jTableSocios.getSelectedRow();
-        if(fila == -1) {
+        if (fila == -1) {
             vistaMensajes.mostrarAdvertencia("Seleccione un socio para borrar");
             return;
         }
         String codigo = (String) vInicioSocios.jTableSocios.getValueAt(fila, 0);
-        
+
         int opt = JOptionPane.showConfirmDialog(null, "¿Seguro que quiere borrar al socio " + codigo + "?");
-        if(opt != JOptionPane.YES_OPTION) return;
+        if (opt != JOptionPane.YES_OPTION) {
+            return;
+        }
 
         Transaction tr = null;
         try {
             sesion = sessionFactory.openSession();
             tr = sesion.beginTransaction();
             Socio s = socioDAO.buscarPorNumeroSocio(sesion, codigo);
-            if(s != null) {
-               socioDAO.borrarSocio(sesion, s);
-               tr.commit();
-               dibujaRellenaTablaSocios();
+            if (s != null) {
+                socioDAO.borrarSocio(sesion, s);
+                tr.commit();
+                dibujaRellenaTablaSocios();
             }
-        } catch(Exception ex) {
-            if(tr != null) tr.rollback();
+        } catch (Exception ex) {
+            if (tr != null) {
+                tr.rollback();
+            }
             vistaMensajes.mostrarError("No se puede borrar al socio (posiblemente tenga actividades o inscripciones).");
         } finally {
-            if(sesion != null && sesion.isOpen()) sesion.close();
+            if (sesion != null && sesion.isOpen()) {
+                sesion.close();
+            }
         }
     }
 
@@ -239,29 +289,33 @@ public class ControladorSocio implements ActionListener {
      */
     private void actualizarSocio() {
         int fila = vInicioSocios.jTableSocios.getSelectedRow();
-        if(fila == -1) {
+        if (fila == -1) {
             vistaMensajes.mostrarAdvertencia("Seleccione un socio para actualizar");
             return;
         }
         String codigo = (String) vInicioSocios.jTableSocios.getValueAt(fila, 0);
-        
+
         Transaction tr = null;
         Socio s = null;
         try {
             sesion = sessionFactory.openSession();
             s = socioDAO.buscarPorNumeroSocio(sesion, codigo);
-        } catch(Exception e) {
+        } catch (Exception e) {
             vistaMensajes.mostrarError("Error al buscar socio: " + e.getMessage());
         } finally {
-            if(sesion != null && sesion.isOpen()) sesion.close();
+            if (sesion != null && sesion.isOpen()) {
+                sesion.close();
+            }
         }
 
-        if(s == null) return;
+        if (s == null) {
+            return;
+        }
 
         VistaSocioDialog dialog = new VistaSocioDialog();
         dialog.setTitle("Actualizar Socio");
         cargarCategorias(dialog);
-        
+
         // Rellenar campos
         dialog.textoNumeroSocio.setText(s.getNumeroSocio());
         dialog.textoNumeroSocio.setEditable(false);
@@ -271,12 +325,13 @@ public class ControladorSocio implements ActionListener {
         dialog.textoFechaNac.setText(s.getFechaNacimiento());
         dialog.textoNombre.setText(s.getNombre());
         dialog.textoTelefono.setText(s.getTelefono());
-        
-        if(s.getCategoria() != null)
+
+        if (s.getCategoria() != null) {
             dialog.comboCategoria.setSelectedItem(String.valueOf(s.getCategoria()));
-         
+        }
+
         dialog.botonAceptar.setText("Actualizar");
-        
+
         dialog.botonAceptar.addActionListener(evt -> {
             // Validamos antes de actualizar
             if (validarDatos(dialog)) {
@@ -284,13 +339,14 @@ public class ControladorSocio implements ActionListener {
             }
         });
         dialog.botonCancelar.addActionListener(evt -> dialog.dispose());
-        
+
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
     }
-    
+
     /**
      * Actualiza los datos del socio en la base de datos.
+     *
      * @param dialog Diálogo con los datos modificados.
      */
     private void actualizarSocioEnBD(VistaSocioDialog dialog) {
@@ -298,7 +354,7 @@ public class ControladorSocio implements ActionListener {
         try {
             sesion = sessionFactory.openSession();
             tr = sesion.beginTransaction();
-            
+
             Socio s = new Socio();
             s.setNumeroSocio(dialog.textoNumeroSocio.getText());
             s.setNombre(dialog.textoNombre.getText());
@@ -307,26 +363,30 @@ public class ControladorSocio implements ActionListener {
             s.setCorreo(dialog.textoCorreo.getText());
             s.setFechaNacimiento(dialog.textoFechaNac.getText());
             s.setFechaEntrada(dialog.textoFechaEntrada.getText());
-            
+
             String cat = (String) dialog.comboCategoria.getSelectedItem();
             if (cat != null && !cat.isEmpty()) {
                 s.setCategoria(cat.charAt(0));
             }
-            
+
             socioDAO.actualizarSocio(sesion, s);
             tr.commit();
-            
+
             vistaMensajes.mostrarInfo("Socio actualizado correctamente");
             dialog.dispose();
             dibujaRellenaTablaSocios();
-        } catch(Exception ex) {
-            if(tr != null) tr.rollback();
+        } catch (Exception ex) {
+            if (tr != null) {
+                tr.rollback();
+            }
             vistaMensajes.mostrarError("Error al actualizar: " + ex.getMessage());
         } finally {
-            if(sesion != null && sesion.isOpen()) sesion.close();
+            if (sesion != null && sesion.isOpen()) {
+                sesion.close();
+            }
         }
     }
-    
+
     /**
      * Carga las categorías en el ComboBox del diálogo.
      */
@@ -334,9 +394,10 @@ public class ControladorSocio implements ActionListener {
         String[] categorias = {"A", "B", "C", "D", "E"};
         dialog.comboCategoria.setModel(new DefaultComboBoxModel<>(categorias));
     }
-    
+
     /**
      * Calcula el siguiente código de socio disponible.
+     *
      * @return El nuevo código (ej: S005).
      */
     private String calcularSiguienteCodigo() {
@@ -345,13 +406,17 @@ public class ControladorSocio implements ActionListener {
         try {
             sesion = sessionFactory.openSession();
             maxCod = socioDAO.obtenerUltimoCodigo(sesion);
-        } catch(Exception e) { 
+        } catch (Exception e) {
         } finally {
-            if (sesion != null && sesion.isOpen()) sesion.close();
+            if (sesion != null && sesion.isOpen()) {
+                sesion.close();
+            }
         }
-        
-        if (maxCod == null) return "S001";
-        
+
+        if (maxCod == null) {
+            return "S001";
+        }
+
         try {
             String numPart = maxCod.substring(1);
             int num = Integer.parseInt(numPart) + 1;

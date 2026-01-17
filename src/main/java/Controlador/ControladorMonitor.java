@@ -125,30 +125,54 @@ public class ControladorMonitor implements ActionListener {
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
     }
-
     /**
-     * Verifica que los datos introducidos en el formulario sean correctos.
-     * * @param dialog Diálogo que contiene los campos de texto.
-     * @return true si los datos son válidos, false si hay errores.
+     * Valida los datos introducidos en el formulario de Monitor.
+     * * Validaciones incluidas:
+     * - Campos obligatorios vacíos.
+     * - Formato de DNI: 8 dígitos + Letra Mayúscula.
+     * - Formato de Correo: Patrón estándar email.
+     * - Longitud de Teléfono: 9 dígitos.
+     * - Fecha de Entrada: No puede ser futura.
+     * * @param dialog Diálogo que contiene los campos de texto a validar.
+     * @return true si todos los datos son válidos, false si hay algún error.
      */
     private boolean validarDatos(VistaMonitorDialog dialog) {
-        // 1. Campos vacíos
+        // 1. Campos obligatorios
         if (dialog.textoNombre.getText().trim().isEmpty() || 
             dialog.textoDni.getText().trim().isEmpty() ||
             dialog.textoCorreo.getText().trim().isEmpty()) {
-            vistaMensajes.mostrarAdvertencia("El nombre, DNI y correo son obligatorios.");
+            vistaMensajes.mostrarAdvertencia("Existen campos obligatorios vacíos (Nombre, DNI o Correo).");
             return false;
         }
 
-        // 2. Validación de DNI (8 dígitos y 1 letra mayúscula)
+        // 2. Validación DNI 
         if (!dialog.textoDni.getText().matches("\\d{8}[A-Z]")) {
-            vistaMensajes.mostrarError("El DNI debe tener 8 números y una letra mayúscula (Ej: 12345678Z).");
+            vistaMensajes.mostrarError("DNI inválido. Formato requerido: 8 números y 1 letra mayúscula (Ej: 12345678Z).");
             return false;
         }
 
-        // 3. Validación de Teléfono (9 dígitos numéricos)
+        // 3. Validación Teléfono
         if (!dialog.textoTelefono.getText().matches("\\d{9}")) {
-            vistaMensajes.mostrarError("El teléfono debe constar de 9 dígitos.");
+            vistaMensajes.mostrarError("Teléfono inválido. Debe contener exactamente 9 dígitos numéricos.");
+            return false;
+        }
+        
+        // 4. Validación Correo
+        if (!dialog.textoCorreo.getText().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+             vistaMensajes.mostrarError("Formato de correo inválido (ejemplo: usuario@dominio.com).");
+             return false;
+        }
+        
+        // 5. Validación Fecha Entrada
+        try {
+            java.time.format.DateTimeFormatter fmt = java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            java.time.LocalDate fecha = java.time.LocalDate.parse(dialog.textoFecha.getText(), fmt);
+            if (fecha.isAfter(java.time.LocalDate.now())) {
+                vistaMensajes.mostrarError("La fecha de entrada no puede ser posterior a la fecha actual.");
+                return false;
+            }
+        } catch (Exception e) {
+            vistaMensajes.mostrarError("Formato de fecha incorrecto. Utilice DD/MM/AAAA.");
             return false;
         }
 
