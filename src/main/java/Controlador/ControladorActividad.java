@@ -19,9 +19,15 @@ import org.hibernate.Transaction;
 
 /**
  * Controlador para la gestión de Actividades.
- * Maneja el CRUD completo, la asignación de monitores y la visualización de estadísticas.
- * Incluye validaciones de negocio como el control de solapamiento de horarios de monitores.
- * * @author Manuel Martín Rodrigo
+ * Se encarga de la lógica CRUD (Crear, Leer, Actualizar, Borrar) de las actividades,
+ * gestionando la interacción entre la vista y el modelo.
+ * * Implementa requisitos clave del checklist:
+ * - Selección de hora mediante lista desplegable
+ * - Validación de choque de monitores
+ * - Validación de precio positivo
+ * - Generación de estadísticas con procedimiento almacenado
+ *
+ * @author Manuel Martín Rodrigo
  */
 public class ControladorActividad implements ActionListener {
 
@@ -34,8 +40,9 @@ public class ControladorActividad implements ActionListener {
 
     /**
      * Constructor del controlador.
-     * Inicializa los DAOs, la vista y configura la tabla inicial.
-     * * @param vInicioActividades Vista principal de actividades.
+     * Inicializa los DAOs, la vista y configura la tabla inicial de actividades.
+     *
+     * @param vInicioActividades Vista principal de gestión de actividades.
      * @param sessionFactory Fábrica de sesiones de Hibernate.
      */
     public ControladorActividad(VistaInicioActividades vInicioActividades, SessionFactory sessionFactory) {
@@ -50,7 +57,7 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Asigna los listeners a los botones de la interfaz.
+     * Asigna los manejadores de eventos (listeners) a los botones de la interfaz.
      */
     private void addListeners() {
         vInicioActividades.nuevaActividad.addActionListener(this);
@@ -73,7 +80,7 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Configura y rellena la tabla de actividades con datos actualizados de la BD.
+     * Configura el modelo de la tabla y carga la lista de actividades desde la base de datos.
      */
     private void dibujaRellenaTablaActividades() {
         GestionTablasActividad.inicializarTablaActividades(vInicioActividades);
@@ -99,8 +106,8 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Maneja las acciones de los botones.
-     * @param e Evento de acción.
+     * Gestiona las acciones realizadas por el usuario en la interfaz.
+     * @param e Evento de acción disparado.
      */
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -128,29 +135,75 @@ public class ControladorActividad implements ActionListener {
 
     /**
      * Abre el diálogo para crear una nueva actividad.
-     * Calcula automáticamente el ID y carga los combos.
+     * Carga las listas desplegables de días, horas y monitores.
      */
     private void nuevaActividad() {
         VistaActividadDialog dialog = new VistaActividadDialog();
         dialog.setTitle("Nueva Actividad");
 
-        // ID Automático (Checklist Item 30)
+        // Generar ID automático
         String nuevoId = calcularSiguienteCodigo();
         dialog.textoId.setText(nuevoId);
         dialog.textoId.setEditable(false);
 
+        // Cargar Combos
         cargarDias(dialog);
+        cargarHoras(dialog); // Carga las horas en el JComboBox
         cargarMonitores(dialog);
 
-        dialog.botonAceptar.addActionListener(evt -> insertarActividadEnBD(dialog));
+        dialog.botonAceptar.addActionListener(evt -> {
+            if(validarDatos(dialog)) {
+                insertarActividadEnBD(dialog);
+            }
+        });
         dialog.botonCancelar.addActionListener(evt -> dialog.dispose());
 
         dialog.setLocationRelativeTo(null);
         dialog.setVisible(true);
     }
+    
+    /**
+     * Valida los campos del formulario.
+     * * @param dialog Ventana de diálogo con los datos.
+     * @return true si los datos son correctos.
+     */
+    private boolean validarDatos(VistaActividadDialog dialog) {
+        // 1. Campos de texto obligatorios
+        if (dialog.textoNombre.getText().trim().isEmpty() || 
+            dialog.textoPrecio.getText().trim().isEmpty()) {
+            vistaMensajes.mostrarAdvertencia("El Nombre y el Precio son obligatorios.");
+            return false;
+        }
+        
+        // 2. Validación de selección de Hora
+        if (dialog.comboHora.getSelectedItem() == null) {
+            vistaMensajes.mostrarAdvertencia("Debe seleccionar una hora de la lista.");
+            return false;
+        }
+
+        try {
+            // 3. Validación de Precio Positivo
+            int precio = Integer.parseInt(dialog.textoPrecio.getText());
+            if (precio < 0) {
+                vistaMensajes.mostrarError("El precio debe ser un valor positivo.");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            vistaMensajes.mostrarError("El precio debe ser un número entero válido.");
+            return false;
+        }
+        
+        // 4. Validación de Monitor seleccionado
+        if (obtenerMonitorDelCombo(dialog) == null) {
+            vistaMensajes.mostrarAdvertencia("Debe seleccionar un Monitor responsable.");
+            return false;
+        }
+        
+        return true;
+    }
 
     /**
-     * Valida los datos e inserta la actividad en la BD.
+     * Inserta la actividad en la base de datos tras verificar choque de monitores.
      */
     private void insertarActividadEnBD(VistaActividadDialog dialog) {
         Actividad a = new Actividad();
@@ -158,20 +211,17 @@ public class ControladorActividad implements ActionListener {
         a.setNombre(dialog.textoNombre.getText());
         a.setDia((String) dialog.comboDia.getSelectedItem());
         a.setDescripcion(dialog.textoDescripcion.getText());
-
+        
+        // Obtener hora del combo (formato "09:00" -> 9)
+        String horaStr = (String) dialog.comboHora.getSelectedItem();
+        int horaInt = Integer.parseInt(horaStr.split(":")[0]);
+        a.setHora(horaInt);
+        
         try {
-            a.setHora(Integer.parseInt(dialog.textoHora.getText()));
             a.setPrecioBaseMes(Integer.parseInt(dialog.textoPrecio.getText()));
-        } catch (NumberFormatException e) {
-            vistaMensajes.mostrarError("La hora y el precio deben ser números enteros.");
-            return;
-        }
+        } catch(NumberFormatException e) { return; } // Ya validado antes
         
         Monitor m = obtenerMonitorDelCombo(dialog);
-        if (m == null) {
-            vistaMensajes.mostrarError("Debe seleccionar un monitor válido.");
-            return;
-        }
         a.setMonitorResponsable(m);
 
         Transaction tr = null;
@@ -179,13 +229,12 @@ public class ControladorActividad implements ActionListener {
             sesion = sessionFactory.openSession();
             tr = sesion.beginTransaction();
             
-            // Verifica si el monitor ya está ocupado ese día a esa hora
+            //Choque de monitores
             if(actividadDAO.existeChoqueMonitor(sesion, m.getCodMonitor(), a.getDia(), a.getHora())) {
                 vistaMensajes.mostrarError("El monitor ya tiene una actividad asignada el " + a.getDia() + " a las " + a.getHora() + "h.");
                 tr.rollback();
                 return;
             }
-            // -----------------------------------------------------
 
             actividadDAO.insertarActividad(sesion, a);
             tr.commit();
@@ -203,7 +252,7 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Elimina la actividad seleccionada.
+     * Elimina la actividad seleccionada tras confirmación.
      */
     private void bajaActividad() {
         int fila = vInicioActividades.jTableActividades.getSelectedRow();
@@ -236,7 +285,7 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Abre el diálogo de edición con los datos de la actividad cargados.
+     * Prepara el formulario de actualización con los datos de la actividad seleccionada.
      */
     private void actualizarActividad() {
         int fila = vInicioActividades.jTableActividades.getSelectedRow();
@@ -261,17 +310,25 @@ public class ControladorActividad implements ActionListener {
 
         VistaActividadDialog dialog = new VistaActividadDialog();
         dialog.setTitle("Actualizar Actividad");
+        
+        // Cargar listas
         cargarDias(dialog);
+        cargarHoras(dialog);
         cargarMonitores(dialog);
 
-        // Rellenar datos
+        // Rellenar datos existentes
         dialog.textoId.setText(a.getIdActividad());
         dialog.textoId.setEditable(false);
         dialog.textoNombre.setText(a.getNombre());
-        dialog.textoHora.setText(String.valueOf(a.getHora()));
         dialog.textoPrecio.setText(String.valueOf(a.getPrecioBaseMes()));
         dialog.textoDescripcion.setText(a.getDescripcion());
+        
+        // Seleccionar valores en los combos
         dialog.comboDia.setSelectedItem(a.getDia());
+        
+        // Seleccionar hora (convertir int a String "HH:00")
+        String horaFormateada = String.format("%02d:00", a.getHora());
+        dialog.comboHora.setSelectedItem(horaFormateada);
 
         if (a.getMonitorResponsable() != null) {
             String item = a.getMonitorResponsable().getCodMonitor() + " - " + a.getMonitorResponsable().getNombre();
@@ -279,7 +336,11 @@ public class ControladorActividad implements ActionListener {
         }
 
         dialog.botonAceptar.setText("Actualizar");
-        dialog.botonAceptar.addActionListener(evt -> actualizarActividadEnBD(dialog));
+        dialog.botonAceptar.addActionListener(evt -> {
+            if(validarDatos(dialog)){
+                actualizarActividadEnBD(dialog);
+            }
+        });
         dialog.botonCancelar.addActionListener(evt -> dialog.dispose());
 
         dialog.setLocationRelativeTo(null);
@@ -287,7 +348,7 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Guarda los cambios de la actividad en la BD.
+     * Guarda los cambios de la actividad editada.
      */
     private void actualizarActividadEnBD(VistaActividadDialog dialog) {
         Actividad a = new Actividad();
@@ -295,22 +356,17 @@ public class ControladorActividad implements ActionListener {
         a.setNombre(dialog.textoNombre.getText());
         a.setDia((String) dialog.comboDia.getSelectedItem());
         a.setDescripcion(dialog.textoDescripcion.getText());
-
+        
+        // Recuperar hora del combo
+        String horaStr = (String) dialog.comboHora.getSelectedItem();
+        int horaInt = Integer.parseInt(horaStr.split(":")[0]);
+        a.setHora(horaInt);
+        
         try {
-            int hora = Integer.parseInt(dialog.textoHora.getText());
-            int precio = Integer.parseInt(dialog.textoPrecio.getText());
-            a.setHora(hora);
-            a.setPrecioBaseMes(precio);
-        } catch (NumberFormatException e) {
-            vistaMensajes.mostrarError("Error: La hora y el precio deben ser valores numéricos enteros.");
-            return;
-        }
-
+            a.setPrecioBaseMes(Integer.parseInt(dialog.textoPrecio.getText()));
+        } catch(NumberFormatException e) {}
+        
         Monitor monitorResponsable = obtenerMonitorDelCombo(dialog);
-        if (monitorResponsable == null) {
-            vistaMensajes.mostrarAdvertencia("Debe seleccionar un Monitor Responsable válido.");
-            return;
-        }
         a.setMonitorResponsable(monitorResponsable);
 
         Transaction tr = null;
@@ -318,9 +374,8 @@ public class ControladorActividad implements ActionListener {
             sesion = sessionFactory.openSession();
             tr = sesion.beginTransaction();
             
-            // Nota: Al actualizar, si no cambiamos el horario, la validación de choque podría saltar con la misma actividad.
-            // Para evitar complejidad en la práctica, permitimos update directo o implementamos validación excluyendo ID propio.
-            // Aquí hacemos update directo confiando en el usuario, o podrías validar igual.
+            // Nota: Se permite actualización directa. La validación de choque estricta
+            // requeriría excluir la propia actividad de la consulta SQL.
             
             actividadDAO.actualizarActividad(sesion, a);
             tr.commit();
@@ -338,15 +393,27 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Carga los días de la semana en el combo.
+     * Rellena el combo de días de la semana.
      */
     private void cargarDias(VistaActividadDialog dialog) {
         String[] dias = {"Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"};
         dialog.comboDia.setModel(new DefaultComboBoxModel<>(dias));
     }
+    
+    /**
+     * Rellena el combo de horas (de 08:00 a 22:00).
+     */
+    private void cargarHoras(VistaActividadDialog dialog) {
+        DefaultComboBoxModel<String> model = new DefaultComboBoxModel<>();
+        // Generamos horas de 8 a 22
+        for (int i = 8; i <= 22; i++) {
+            model.addElement(String.format("%02d:00", i));
+        }
+        dialog.comboHora.setModel(model);
+    }
 
     /**
-     * Carga la lista de monitores desde la BD al combo.
+     * Rellena el combo de monitores con datos de la BD.
      */
     private void cargarMonitores(VistaActividadDialog dialog) {
         Transaction tr = null;
@@ -368,7 +435,7 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Helper para obtener el objeto Monitor a partir del String seleccionado en el combo.
+     * Recupera el objeto Monitor seleccionado en el combo.
      */
     private Monitor obtenerMonitorDelCombo(VistaActividadDialog dialog) {
         String seleccionado = (String) dialog.comboMonitor.getSelectedItem();
@@ -414,7 +481,7 @@ public class ControladorActividad implements ActionListener {
     }
 
     /**
-     * Muestra las estadísticas de la actividad seleccionada llamando al procedimiento almacenado.
+     * Muestra las estadísticas invocando al procedimiento almacenado.
      */
     private void mostrarEstadisticas() {
         int fila = vInicioActividades.jTableActividades.getSelectedRow();
@@ -451,8 +518,7 @@ public class ControladorActividad implements ActionListener {
     }
     
     /**
-     * Calcula el siguiente código de actividad (ACT001, ACT002...).
-     * @return El nuevo código generado.
+     * Calcula el siguiente código de actividad disponible (ACT001, ACT002...).
      */
     private String calcularSiguienteCodigo() {
         Transaction tr = null;
@@ -460,16 +526,13 @@ public class ControladorActividad implements ActionListener {
         try {
             sesion = sessionFactory.openSession();
             maxCod = actividadDAO.obtenerUltimoCodigo(sesion);
-        } catch(Exception e) {
-            // Si falla, ignoramos
-        } finally {
+        } catch(Exception e) { } finally {
             if(sesion != null && sesion.isOpen()) sesion.close();
         }
         
         if (maxCod == null) return "ACT001";
         
         try {
-            // Asume formato "ACTxxx"
             String numPart = maxCod.substring(3); 
             int num = Integer.parseInt(numPart) + 1;
             return String.format("ACT%03d", num);
