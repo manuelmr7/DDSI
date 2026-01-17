@@ -20,7 +20,7 @@ import java.util.Set;
  * "ACTIVIDAD" de la base de datos. Incluye consultas (NamedQueries) para
  * búsquedas por atributos.
  *
- * * @author manue
+ * * @author Manuel Martín Rodrigo
  */
 @Entity
 @Table(name = "ACTIVIDAD")

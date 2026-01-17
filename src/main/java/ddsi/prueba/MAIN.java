@@ -5,7 +5,9 @@ import com.formdev.flatlaf.intellijthemes.FlatArcDarkIJTheme;
 import com.formdev.flatlaf.intellijthemes.materialthemeuilite.FlatMaterialDeepOceanIJTheme;
 import com.formdev.flatlaf.intellijthemes.FlatNordIJTheme;
 /**
- * 
+ * Clase principal de la aplicación.
+ * Configura el aspecto visual (Look and Feel) e inicia el controlador de conexión.
+ *
  * @author manue
  */
 

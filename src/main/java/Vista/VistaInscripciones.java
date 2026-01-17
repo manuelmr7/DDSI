@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista de inscripciones
+ * @author Manuel Martín Rodrigo
  */
 public class VistaInscripciones extends javax.swing.JPanel {
 

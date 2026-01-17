@@ -13,14 +13,13 @@ import javax.swing.JOptionPane;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+
 /**
  * Controlador para la gestión de Monitores.
- * Se encarga de la lógica CRUD (Crear, Leer, Actualizar, Borrar) de los monitores
- * y actualiza la tabla de la interfaz gráfica correspondiente.
- *
- * @author manue
+ * Se encarga de la lógica CRUD (Crear, Leer, Actualizar, Borrar) de los monitores,
+ * gestionando la interacción entre la VistaInicioMonitores y el modelo de datos.
+ * * @author Manuel Martín Rodrigo
  */
-
 public class ControladorMonitor implements ActionListener {
 
     private final SessionFactory sessionFactory;
@@ -29,6 +28,12 @@ public class ControladorMonitor implements ActionListener {
     private final VistaMensajes vistaMensajes;
     private Session sesion;
 
+    /**
+     * Constructor del controlador.
+     * Inicializa las referencias a la vista, el DAO y los mensajes, y configura la tabla inicial.
+     * * @param vInicioMonitores Instancia de la vista principal de monitores.
+     * @param sessionFactory Fábrica de sesiones de Hibernate compartida.
+     */
     public ControladorMonitor(VistaInicioMonitores vInicioMonitores, SessionFactory sessionFactory) {
         this.vInicioMonitores = vInicioMonitores;
         this.sessionFactory = sessionFactory;
@@ -39,6 +44,9 @@ public class ControladorMonitor implements ActionListener {
         dibujaRellenaTablaMonitores();
     }
     
+    /**
+     * Asigna los manejadores de eventos (listeners) a los botones de la vista.
+     */
     private void addListeners() {
         vInicioMonitores.nuevoMonitor.addActionListener(this);
         vInicioMonitores.nuevoMonitor.setActionCommand("NuevoMonitor");
@@ -50,6 +58,10 @@ public class ControladorMonitor implements ActionListener {
         vInicioMonitores.actualizaciónMonitor.setActionCommand("ActualizarMonitor");
     }
 
+    /**
+     * Configura el modelo de la tabla visual y carga la lista de monitores desde la base de datos.
+     * Realiza una transacción de lectura mediante Hibernate.
+     */
     private void dibujaRellenaTablaMonitores() {
         GestionTablasMonitor.inicializarTablaMonitores(vInicioMonitores);
         GestionTablasMonitor.dibujarTablaMonitores(vInicioMonitores);
@@ -70,6 +82,10 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
+    /**
+     * Gestiona las acciones realizadas por el usuario en la interfaz.
+     * @param e Evento de acción disparado.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -84,6 +100,11 @@ public class ControladorMonitor implements ActionListener {
                 break;
         }
     }
+
+    /**
+     * Prepara y muestra la ventana de diálogo para dar de alta un nuevo monitor.
+     * Calcula automáticamente el siguiente código disponible.
+     */
     private void nuevoMonitor() {
         VistaMonitorDialog dialog = new VistaMonitorDialog();
         dialog.setTitle("Nuevo Monitor");
@@ -93,7 +114,10 @@ public class ControladorMonitor implements ActionListener {
         dialog.textoCodigo.setEditable(false);
         
         dialog.botonAceptar.addActionListener(evt -> {
-            insertarMonitorEnBD(dialog);
+            // Validamos antes de intentar guardar
+            if (validarDatos(dialog)) {
+                insertarMonitorEnBD(dialog);
+            }
         });
         
         dialog.botonCancelar.addActionListener(evt -> dialog.dispose());
@@ -102,6 +126,39 @@ public class ControladorMonitor implements ActionListener {
         dialog.setVisible(true);
     }
 
+    /**
+     * Verifica que los datos introducidos en el formulario sean correctos.
+     * * @param dialog Diálogo que contiene los campos de texto.
+     * @return true si los datos son válidos, false si hay errores.
+     */
+    private boolean validarDatos(VistaMonitorDialog dialog) {
+        // 1. Campos vacíos
+        if (dialog.textoNombre.getText().trim().isEmpty() || 
+            dialog.textoDni.getText().trim().isEmpty() ||
+            dialog.textoCorreo.getText().trim().isEmpty()) {
+            vistaMensajes.mostrarAdvertencia("El nombre, DNI y correo son obligatorios.");
+            return false;
+        }
+
+        // 2. Validación de DNI (8 dígitos y 1 letra mayúscula)
+        if (!dialog.textoDni.getText().matches("\\d{8}[A-Z]")) {
+            vistaMensajes.mostrarError("El DNI debe tener 8 números y una letra mayúscula (Ej: 12345678Z).");
+            return false;
+        }
+
+        // 3. Validación de Teléfono (9 dígitos numéricos)
+        if (!dialog.textoTelefono.getText().matches("\\d{9}")) {
+            vistaMensajes.mostrarError("El teléfono debe constar de 9 dígitos.");
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Recoge los datos validados del diálogo e inserta el nuevo monitor en la BD.
+     * * @param dialog Diálogo con los datos del formulario.
+     */
     private void insertarMonitorEnBD(VistaMonitorDialog dialog) {
         Monitor m = new Monitor();
         m.setCodMonitor(dialog.textoCodigo.getText());
@@ -131,6 +188,10 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
+    /**
+     * Elimina el monitor seleccionado en la tabla, previa confirmación.
+     * Controla excepciones de integridad referencial (si tiene actividades asignadas).
+     */
     private void bajaMonitor() {
         int fila = vInicioMonitores.jTableMonitores.getSelectedRow();
         if (fila == -1) {
@@ -161,6 +222,9 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
+    /**
+     * Abre el diálogo de edición cargando los datos del monitor seleccionado.
+     */
     private void actualizarMonitor() {
         int fila = vInicioMonitores.jTableMonitores.getSelectedRow();
         if (fila == -1) {
@@ -183,9 +247,10 @@ public class ControladorMonitor implements ActionListener {
 
         VistaMonitorDialog dialog = new VistaMonitorDialog();
         dialog.setTitle("Actualizar Monitor");
+        
+        // Rellenar campos
         dialog.textoCodigo.setText(m.getCodMonitor());
         dialog.textoCodigo.setEditable(false); 
-        
         dialog.textoNombre.setText(m.getNombre());
         dialog.textoDni.setText(m.getDni());
         dialog.textoTelefono.setText(m.getTelefono());
@@ -196,7 +261,9 @@ public class ControladorMonitor implements ActionListener {
         dialog.botonAceptar.setText("Actualizar");
         
         dialog.botonAceptar.addActionListener(evt -> {
-            actualizarMonitorEnBD(dialog);
+            if (validarDatos(dialog)) {
+                actualizarMonitorEnBD(dialog);
+            }
         });
         dialog.botonCancelar.addActionListener(evt -> dialog.dispose());
         
@@ -204,6 +271,10 @@ public class ControladorMonitor implements ActionListener {
         dialog.setVisible(true);
     }
 
+    /**
+     * Guarda los cambios realizados sobre un monitor existente en la base de datos.
+     * @param dialog Diálogo con los datos modificados.
+     */
     private void actualizarMonitorEnBD(VistaMonitorDialog dialog) {
         Transaction tr = null;
         try {
@@ -234,18 +305,24 @@ public class ControladorMonitor implements ActionListener {
         }
     }
 
+    /**
+     * Calcula el siguiente código de monitor disponible (Formato M001, M002...).
+     * @return String con el nuevo código.
+     */
     private String calcularSiguienteCodigo() {
         Transaction tr = null;
         String maxCod = null;
         try {
             sesion = sessionFactory.openSession();
+            // Requiere que MonitorDAO tenga este método implementado
             maxCod = monitorDAO.obtenerUltimoCodigo(sesion);
         } catch(Exception e) {
+            // Si falla o no existe, asumimos nulo
         } finally {
             if (sesion != null && sesion.isOpen()) sesion.close();
         }
         
-        if (maxCod == null) return "M001";
+        if (maxCod == null || maxCod.isEmpty()) return "M001";
         
         try {
             String numPart = maxCod.substring(1);

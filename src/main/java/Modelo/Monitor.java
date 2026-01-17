@@ -17,7 +17,7 @@ import java.util.Set;
  * "MONITOR" de la base de datos. Incluye consultas predefinidas para buscar por
  * distintos campos.
  *
- * * @author manue
+ * * @author Manuel Martín Rodrigo
  */
 @Entity
 @Table(name = "MONITOR")

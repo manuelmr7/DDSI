@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista de actividades
+ * @author Manuel Martín Rodrigo
  */
 public class VistaActividadDialog extends javax.swing.JDialog {
     

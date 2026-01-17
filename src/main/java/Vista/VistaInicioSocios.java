@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista general de socios
+ * @author Manuel Martín Rodrigo
  */
 public class VistaInicioSocios extends javax.swing.JPanel {
 

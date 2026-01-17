@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista general de actividades
+ * @author Manuel Martín Rodrigo
  */
 public class VistaInicioActividades extends javax.swing.JPanel {
 

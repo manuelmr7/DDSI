@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista general de monitores
+ * @author Manuel Martín Rodrigo
  */
 public class VistaInicioMonitores extends javax.swing.JPanel {
 

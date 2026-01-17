@@ -7,9 +7,9 @@ import java.sql.CallableStatement;
 import java.sql.Types;
 
 /**
- * Clase DAO para la gestión de Actividades. Permite realizar operaciones CRUD,
- * búsquedas avanzadas y cálculo de estadísticas.
- * @author manue
+ * Clase Data Access Object (DAO) para la gestión de Actividades. 
+ * Permite realizar operaciones CRUD, búsquedas avanzadas y cálculo de estadísticas.
+ * @author Manuel Martín Rodrigo
  */
 public class ActividadDAO {
 
@@ -18,11 +18,9 @@ public class ActividadDAO {
 
     /**
      * Recupera la lista de socios inscritos en una actividad específica.
-     *
      * @param session Sesión de Hibernate activa.
      * @param idActividad Identificador de la actividad.
      * @return Lista de objetos Socio que realizan dicha actividad.
-     * @throws Exception Si ocurre un error en la consulta.
      */
     public List<Socio> obtenerSociosInscritos(Session session, String idActividad) throws Exception {
         Query<Socio> query = session.createQuery(
@@ -35,11 +33,9 @@ public class ActividadDAO {
 
     /**
      * Busca una actividad por su identificador único (ID).
-     *
-     * @param session Sesión de Hibernate activa.
-     * @param idActividad ID de la actividad a buscar.
-     * @return El objeto Actividad encontrado o null.
-     * @throws Exception Si ocurre un error.
+     * @param session Sesión activa.
+     * @param idActividad ID a buscar.
+     * @return Objeto Actividad o null.
      */
     public Actividad buscarPorId(Session session, String idActividad) throws Exception {
         return session.find(Actividad.class, idActividad);
@@ -47,8 +43,7 @@ public class ActividadDAO {
 
     /**
      * Obtiene el listado completo de actividades disponibles.
-     *
-     * @param session Sesión de Hibernate activa.
+     * @param session Sesión activa.
      * @return Lista de todas las actividades.
      */
     public List<Actividad> listaActividades(Session session) {
@@ -58,10 +53,8 @@ public class ActividadDAO {
 
     /**
      * Inserta una nueva actividad en la base de datos.
-     *
-     * @param session Sesión de Hibernate activa.
-     * @param actividad Objeto Actividad a guardar.
-     * @throws Exception Si ocurre un error al guardar.
+     * @param session Sesión activa.
+     * @param actividad Objeto a guardar.
      */
     public void insertarActividad(Session session, Actividad actividad) throws Exception {
         session.save(actividad);
@@ -69,10 +62,8 @@ public class ActividadDAO {
 
     /**
      * Elimina una actividad de la base de datos.
-     *
-     * @param session Sesión de Hibernate activa.
-     * @param actividad Objeto Actividad a borrar.
-     * @throws Exception Si ocurre un error al borrar.
+     * @param session Sesión activa.
+     * @param actividad Objeto a borrar.
      */
     public void borrarActividad(Session session, Actividad actividad) throws Exception {
         session.delete(actividad);
@@ -80,23 +71,18 @@ public class ActividadDAO {
 
     /**
      * Actualiza los datos de una actividad existente.
-     *
-     * @param session Sesión de Hibernate activa.
-     * @param actividad Objeto Actividad con los nuevos datos.
-     * @throws Exception Si ocurre un error al actualizar.
+     * @param session Sesión activa.
+     * @param actividad Objeto con nuevos datos.
      */
     public void actualizarActividad(Session session, Actividad actividad) throws Exception {
         session.update(actividad);
     }
 
     /**
-     * Busca actividades cuyo nombre contenga el texto proporcionado (filtro
-     * parcial).
-     *
-     * @param session Sesión de Hibernate activa.
-     * @param parteNombre Texto a buscar dentro del nombre.
+     * Busca actividades cuyo nombre contenga el texto proporcionado.
+     * @param session Sesión activa.
+     * @param parteNombre Texto a buscar.
      * @return Lista de actividades coincidentes.
-     * @throws Exception Si ocurre un error en la consulta.
      */
     public List<Actividad> buscarActividadesPorNombre(Session session, String parteNombre) throws Exception {
         String hql = "FROM Actividad a WHERE a.nombre LIKE :nombre";
@@ -106,24 +92,47 @@ public class ActividadDAO {
     }
 
     /**
-     * Llama al Procedimiento Almacenado 'sp_estadisticas_actividad' para
-     * obtener métricas.
-     *
-     * @param session Sesión de Hibernate activa.
-     * @param idActividad ID de la actividad a analizar.
-     * @return Array de objetos: [0]=NumSocios, [1]=EdadMedia,
-     * [2]=CategoriaFrecuente, [3]=Ingresos.
+     * Obtiene el código (ID) más alto registrado en la tabla ACTIVIDAD.
+     * Necesario para el cálculo automático de claves (Item 30 del Checklist).
+     * @param s Sesión activa.
+     * @return El String con el último ID o null si la tabla está vacía.
+     */
+    public String obtenerUltimoCodigo(Session s) {
+        String hql = "SELECT max(a.idActividad) FROM Actividad a";
+        Query<String> q = s.createQuery(hql, String.class);
+        return q.uniqueResult();
+    }
+
+    /**
+     * Verifica si un monitor ya tiene asignada una actividad ese mismo día y hora.
+     * @param session Sesión activa.
+     * @param codMonitor Código del monitor.
+     * @param dia Día de la semana.
+     * @param hora Hora de la actividad (int).
+     * @return true si ya está ocupado, false si está libre.
+     */
+    public boolean existeChoqueMonitor(Session session, String codMonitor, String dia, int hora) {
+        String hql = "SELECT count(a) FROM Actividad a WHERE a.monitorResponsable.codMonitor = :m AND a.dia = :d AND a.hora = :h";
+        Query<Long> q = session.createQuery(hql, Long.class);
+        q.setParameter("m", codMonitor);
+        q.setParameter("d", dia);
+        q.setParameter("h", hora);
+        return q.uniqueResult() > 0;
+    }
+
+    /**
+     * Llama al Procedimiento Almacenado 'sp_estadisticas_actividad'.
+     * @param session Sesión activa.
+     * @param idActividad ID de la actividad.
+     * @return Array con las estadísticas.
      */
     public Object[] obtenerEstadisticas(org.hibernate.Session session, String idActividad) {
         return session.doReturningWork(connection -> {
             Object[] resultados = new Object[4];
-            // Llamada JDBC al procedimiento: 1 parámetro de entrada (IN) y 4 de salida (OUT)
             String sql = "{call sp_estadisticas_actividad(?, ?, ?, ?, ?)}";
 
             try (CallableStatement call = connection.prepareCall(sql)) {
                 call.setString(1, idActividad);
-
-                // Registramos los tipos de datos de salida
                 call.registerOutParameter(2, Types.INTEGER); // socios
                 call.registerOutParameter(3, Types.DOUBLE);  // edad
                 call.registerOutParameter(4, Types.CHAR);    // categoria

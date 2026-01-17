@@ -17,7 +17,7 @@ import java.util.Set;
  * "SOCIO" de la base de datos usando anotaciones JPA. Incluye consultas
  * predefinidas (NamedQueries) para búsquedas por diferentes campos.
  *
- * * @author manue
+ * * @author Manuel Martín Rodrigo
  */
 @Entity
 @Table(name = "SOCIO")

@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista de monitores
+ * @author Manuel Martín Rodrigo
  */
 public class VistaMonitorDialog extends javax.swing.JDialog {
     

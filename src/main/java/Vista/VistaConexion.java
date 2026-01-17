@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista de conexión
+ * @author Manuel Martín Rodrigo
  */
 public class VistaConexion extends javax.swing.JFrame {
     

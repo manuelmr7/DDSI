@@ -7,7 +7,7 @@ import org.hibernate.query.Query;
 /**
  * Clase Data Access Object (DAO) para la gestión de Socios. Maneja todas las
  * operaciones CRUD y consultas relacionadas con la tabla SOCIO.
- * @author manue
+ * @author Manuel Martín Rodrigo
  */
 public class SocioDAO {
 

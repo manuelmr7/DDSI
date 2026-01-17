@@ -1,9 +1,8 @@
-
 package Vista;
 
 /**
- *
- * @author manue
+ * Vita de  socios
+ * @author Manuel Martín Rodrigo
  */
 public class VistaSocioDialog extends javax.swing.JDialog {
     

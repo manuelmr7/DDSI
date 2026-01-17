@@ -6,13 +6,12 @@ import Vista.VistaMensajes;
 import org.hibernate.SessionFactory;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import javax.swing.JOptionPane;
+
 /**
- * Controlador de inicio de sesión.
- * Gestiona el establecimiento de la conexión inicial con la base de datos MariaDB
- * utilizando las credenciales introducidas por el usuario.
+ * Controlador para la ventana de inicio de sesión.
+ * Gestiona la autenticación del usuario contra la base de datos y la apertura de la ventana principal.
  *
- * @author manue
+ * @author Manuel Martín Rodrigo
  */
 public class ControladorConexion implements ActionListener {
     private VistaConexion vistaConexion;
@@ -21,6 +20,9 @@ public class ControladorConexion implements ActionListener {
     private String usuario;
     private String password;
 
+    /**
+     * Constructor del controlador. Inicializa la vista de conexión y sus listeners.
+     */
     public ControladorConexion() {
         this.vistaConexion = new VistaConexion();
         this.vistaMensajes = new VistaMensajes();
@@ -33,11 +35,18 @@ public class ControladorConexion implements ActionListener {
         vistaConexion.setVisible(true);
     }
 
+    /**
+     * Asigna los listeners a los botones de la vista.
+     */
     private void addListeners() {
         vistaConexion.botonEntrar.addActionListener(this);
         vistaConexion.botonCancelar.addActionListener(this);
     }
 
+    /**
+     * Maneja los eventos de acción de los botones.
+     * @param e Evento disparado.
+     */
     @Override
     public void actionPerformed(ActionEvent e) {
         switch (e.getActionCommand()) {
@@ -50,6 +59,10 @@ public class ControladorConexion implements ActionListener {
         }
     }
 
+    /**
+     * Intenta establecer la conexión con Hibernate usando las credenciales introducidas.
+     * Si es exitosa, abre el ControladorPrincipal.
+     */
     private void conectar() {
         usuario = vistaConexion.textoUser.getText().trim();
         password = new String(vistaConexion.textoPass.getPassword());
@@ -58,11 +71,11 @@ public class ControladorConexion implements ActionListener {
             sessionFactory = HibernateUtil.buildSessionFactory(usuario, password);
             
             if (sessionFactory == null || sessionFactory.isClosed()) {
-                vistaMensajes.mostrarError("Error al introducir las credenciales");
+                vistaMensajes.mostrarError("Error al introducir las credenciales o conectar con el servidor.");
                 return;
             }
             
-            vistaMensajes.mostrarInfo("Conexión correcta con Hibernate\nVa a acceder a la aplicación");
+            vistaMensajes.mostrarInfo("Conexión correcta con Hibernate.\nAccediendo a la aplicación...");
             vistaConexion.dispose();
             new ControladorPrincipal(sessionFactory);
             
@@ -72,8 +85,11 @@ public class ControladorConexion implements ActionListener {
         }
     }
 
+    /**
+     * Cierra la aplicación.
+     */
     private void salir() {
-        vistaMensajes.mostrarInfo("Salida correcta de la aplicación");
+        vistaMensajes.mostrarInfo("Salida de la aplicación.");
         vistaConexion.dispose();
         System.exit(0);
     }

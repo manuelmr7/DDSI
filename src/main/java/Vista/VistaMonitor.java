@@ -4,11 +4,13 @@ import Modelo.Monitor;
 import java.util.List;
 /**
  * 
- * @author manue
+ * @author Manuel Martín Rodrigo
  */
 
 public class VistaMonitor {
-    
+    /**
+     * Muestra el menú para los monitores
+     */
     public void mostrarMenuMonitor() {
         System.out.println("\n*********");
         System.out.println("Monitores");

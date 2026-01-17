@@ -2,8 +2,8 @@
 package Vista;
 
 /**
- *
- * @author manue
+ * Vista Principal
+ * @author Manuel Martín Rodrigo
  */
 public class VistaPrincipal extends javax.swing.JFrame {
     
