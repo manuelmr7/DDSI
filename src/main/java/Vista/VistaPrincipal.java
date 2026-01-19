@@ -1,6 +1,13 @@
-
 package Vista;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Image;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 /**
  * Vista Principal
  * @author Manuel Martín Rodrigo
@@ -11,13 +18,16 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private java.awt.CardLayout cardLayout;
     /**
      * Creates new form VistaPrincipal
-     */
+     */    
     public VistaPrincipal() {
+        this.setUndecorated(true);
         initComponents();
-        this.cardLayout=new java.awt.CardLayout();
+        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        this.cardLayout = new java.awt.CardLayout();
         panelContenedor.setLayout(this.cardLayout);
-        this.setMinimumSize(new java.awt.Dimension(1400,600));
+        this.setMinimumSize(new java.awt.Dimension(1920,1080));
     }
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -55,11 +65,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
         panelContenedor.setLayout(panelContenedorLayout);
         panelContenedorLayout.setHorizontalGroup(
             panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 829, Short.MAX_VALUE)
         );
         panelContenedorLayout.setVerticalGroup(
             panelContenedorLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 278, Short.MAX_VALUE)
+            .addGap(0, 656, Short.MAX_VALUE)
         );
 
         menuInicio.setText("Inicio");
@@ -108,6 +118,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
         menuSalir.setText("Salir");
 
         menuItemSalir.setText("Salir");
+        menuItemSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuItemSalirActionPerformed(evt);
+            }
+        });
         menuSalir.add(menuItemSalir);
 
         menuBar.add(menuSalir);
@@ -131,6 +146,10 @@ public class VistaPrincipal extends javax.swing.JFrame {
     private void menuItemGestionMonitoresActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemGestionMonitoresActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_menuItemGestionMonitoresActionPerformed
+
+    private void menuItemSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuItemSalirActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_menuItemSalirActionPerformed
 
     /**
      * @param args the command line arguments

@@ -166,7 +166,9 @@ public class ControladorMonitor implements ActionListener {
             vistaMensajes.mostrarError("Teléfono inválido (9 dígitos).");
             return false;
         }
-        if (!dialog.textoCorreo.getText().matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+        
+        String correo=dialog.textoCorreo.getText().trim();
+        if (!correo.matches("^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,}$")) {
              vistaMensajes.mostrarError("Correo inválido.");
              return false;
         }
