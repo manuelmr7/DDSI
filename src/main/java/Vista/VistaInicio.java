@@ -1,17 +1,43 @@
-
 package Vista;
-
+import java.awt.Graphics;
+import javax.swing.ImageIcon;
+import java.awt.Image;
+import java.net.URL;
 /**
  * Vista Inicio
+ *
  * @author Manuel Martín Rodrigo
  */
 public class VistaInicio extends javax.swing.JPanel {
-
+    private Image imagenFondo;
     /**
      * Creates new form VistaInicio
      */
     public VistaInicio() {
+        cargarImagenFondo();
         initComponents();
+        this.setLayout(new java.awt.GridBagLayout());
+        this.add(jLabel1);
+    }
+
+    private void cargarImagenFondo() {
+        try {
+            URL imgUrl = getClass().getResource("/imagenes/logo.png");
+            if (imgUrl != null) {
+                imagenFondo = new ImageIcon(imgUrl).getImage();
+            } else {
+                System.err.println("Imagen no encontrada: /imagenes/logo.png");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (imagenFondo != null) {
+            g.drawImage(imagenFondo, 0, 0, getWidth(), getHeight(), this);
+        }
     }
 
     /**
@@ -26,14 +52,13 @@ public class VistaInicio extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel1.setText("Body Perfect");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(107, Short.MAX_VALUE)
+                .addContainerGap(206, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(106, 106, 106))
         );
@@ -42,7 +67,7 @@ public class VistaInicio extends javax.swing.JPanel {
             .addGroup(layout.createSequentialGroup()
                 .addGap(130, 130, 130)
                 .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap(153, Short.MAX_VALUE))
+                .addContainerGap(174, Short.MAX_VALUE))
         );
     }// </editor-fold>//GEN-END:initComponents
 

@@ -45,7 +45,7 @@ public class GestionTablasActividad {
      * @param vInicio Vista principal de actividades.
      */
     public static void dibujarTablaActividades(VistaInicioActividades vInicio) {
-        String[] columnas = {"Código", "Nombre", "Día", "Hora", "Precio", "Monitor Resp."};
+        String[] columnas = {"Código", "Nombre", "Día", "Hora", "Precio", "Monitor Resp.", "Descripción"};
         modeloTablaActividades.setColumnIdentifiers(columnas);
 
         JTable t = vInicio.jTableActividades;
@@ -55,7 +55,7 @@ public class GestionTablasActividad {
         t.setAutoCreateRowSorter(true);
 
         // Definición de anchos específicos para mejorar la visualización
-        int[] anchuras = {60, 150, 80, 50, 50, 200};
+        int[] anchuras = {60, 150, 80, 50, 50, 200,400};
         TableColumnModel modeloColumna = t.getColumnModel();
 
         for (int i = 0; i < anchuras.length; i++) {
@@ -72,7 +72,7 @@ public class GestionTablasActividad {
      * @param actividades Lista de actividades a mostrar en la tabla.
      */
     public static void rellenarTablaActividades(List<Actividad> actividades) {
-        Object[] fila = new Object[6];
+        Object[] fila = new Object[7];
         for (Actividad a : actividades) {
             fila[0] = a.getIdActividad();
             fila[1] = a.getNombre();
@@ -86,6 +86,7 @@ public class GestionTablasActividad {
             } else {
                 fila[5] = "Sin Asignar";
             }
+            fila[6]=a.getDescripcion();
             modeloTablaActividades.addRow(fila);
         }
     }

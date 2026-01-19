@@ -1,13 +1,4 @@
 package Vista;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Image;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.SwingConstants;
 /**
  * Vista Principal
  * @author Manuel Martín Rodrigo
@@ -20,12 +11,11 @@ public class VistaPrincipal extends javax.swing.JFrame {
      * Creates new form VistaPrincipal
      */    
     public VistaPrincipal() {
-        this.setUndecorated(true);
         initComponents();
-        this.setExtendedState(javax.swing.JFrame.MAXIMIZED_BOTH);
+        
         this.cardLayout = new java.awt.CardLayout();
         panelContenedor.setLayout(this.cardLayout);
-        this.setMinimumSize(new java.awt.Dimension(1920,1080));
+        this.setMinimumSize(new java.awt.Dimension(1400,600));
     }
     
 
