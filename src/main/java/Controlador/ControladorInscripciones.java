@@ -20,7 +20,7 @@ import org.hibernate.Transaction;
  * Controlador para la gestión de Inscripciones.
  * Permite inscribir y desinscribir socios de actividades de forma visual.
  * Gestiona la interacción entre la ventana de inscripciones (Vista) y la base de datos (Modelo).
- * * @author Manuel Martín Rodrigo
+ * @author Manuel Martín Rodrigo
  */
 public class ControladorInscripciones implements ActionListener {
 
